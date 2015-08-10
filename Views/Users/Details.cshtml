@@ -1,0 +1,166 @@
+﻿@model Bearer.Models.User
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2 class="text-warning">Details of user: <strong>@Html.DisplayFor(c => c.UserName)</strong></h2>
+
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            User Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+        <dt>
+            Active?
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+
+
+        <dt>
+            email
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            email Confirmed?
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailConfirmed)
+        </dd>
+
+        <dt>
+            Phone#
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+
+        <dt>
+            Phone# Confirmed
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumberConfirmed)
+        </dd>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Comment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Comment)
+        </dd>
+
+
+        <dt class="alert-info">
+            Last Login (UTC)
+        </dt>
+
+        <dd class ="alert-info">
+            @Html.DisplayFor(model => model.LastLogin)
+        </dd>
+
+
+
+        <dt class="alert-info">
+            Last Lockout (UTC)
+        </dt>
+
+        <dd class="alert-info">
+            @Html.DisplayFor(model => model.LastLockout)
+        </dd>
+        <dt class="alert-info">
+            Last Signin Fail (UTC)
+        </dt>
+
+        <dd class="alert-info">
+            @Html.DisplayFor(model => model.LastSignInFailure)
+        </dd>
+
+
+        <dt class="alert-info">
+            Access Failed Count
+        </dt>
+
+        
+        
+        <dd class="alert-info">
+            @Html.DisplayFor(model => model.AccessFailedCount)
+        </dd>
+
+
+
+        <dt class="alert-info">
+            No of Logins
+        </dt>
+
+        <dd class="alert-info">
+            @Html.DisplayFor(model => model.NoOfLogins)
+        </dd>
+
+        <dt class="alert-info">
+            Last Login user IP Address
+        </dt>
+
+        <dd class="alert-info">
+            @Html.DisplayFor(model => model.IpAddressOfLastLogin)
+        </dd>
+
+
+        
+        <dt class="alert-warning">
+            Created (UTC)
+        </dt>
+
+        <dd class="alert-warning">
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+
+        <dt class="alert-warning">
+            By
+        </dt>
+
+        <dd class="alert-warning">
+            @Html.DisplayFor(model => model.CreatedUser)
+        </dd>
+
+        <dt class="alert-warning">
+            Modified (UTC)
+        </dt>
+
+        <dd class="alert-warning">
+            @Html.DisplayFor(model => model.ModifiedDate)
+        </dd>
+
+        <dt class="alert-warning">
+            By
+        </dt>
+
+        <dd class="alert-warning">
+            @Html.DisplayFor(model => model.ModifiedUser)
+        </dd>
+
+
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

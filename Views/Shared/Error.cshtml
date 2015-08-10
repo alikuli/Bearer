@@ -1,0 +1,26 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    if (string.IsNullOrEmpty(ViewBag.Title))
+    { 
+        ViewBag.Title = "Error";
+    }
+}
+
+
+
+<h1 class="text-danger">@ViewBag.Title</h1>
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+@{
+    if (string.IsNullOrEmpty(ViewBag.Message))
+    { 
+        <h2 class="text-danger">An error occurred while processing your request.</h2>
+    }
+    else
+    {
+        <h2 class ="text-danger">@ViewBag.Message</h2>
+    }
+}
+
