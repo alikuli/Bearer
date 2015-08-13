@@ -7,12 +7,14 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using Bearer.Models;
+//using Bearer.Models;
 using System.Net;
 using SendGrid;
 using System.Net.Mail;
 using System.IO;
 using System.Text;
+using ModelsClassLibrary.Models;
+using AppDbx.Models;
 
 
 namespace Bearer

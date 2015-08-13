@@ -1,4 +1,4 @@
-﻿using Bearer.Models;
+﻿using ModelsClassLibrary.Models;
 using Bearer.MyPrograms;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using AppDbx.Models;
 
 namespace Bearer.Controllers
 

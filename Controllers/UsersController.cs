@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Bearer.Models;
+//using Bearer.Models;
 using Microsoft.AspNet.Identity;
 using System.Text;
+using ModelsClassLibrary.Models;
+using AppDbx.Models;
 
 namespace Bearer.Controllers
 {
