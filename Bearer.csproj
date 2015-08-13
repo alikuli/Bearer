@@ -187,20 +187,6 @@
     <Compile Include="Migrations\201508041116499_First.Designer.cs">
       <DependentUpon>201508041116499_First.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Common.cs" />
-    <Compile Include="Models\Configuration.cs" />
-    <Compile Include="Models\GlobalSetupValues.cs" />
-    <Compile Include="Models\GlobalValuesVM.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="MyPrograms\MyConstants.cs" />
-    <Compile Include="Models\SelectListVM.cs" />
-    <Compile Include="Models\SetUp.cs" />
-    <Compile Include="Models\SetupVM.cs" />
-    <Compile Include="Models\UsersVM.cs" />
-    <Compile Include="MyPrograms\MyValidators.cs" />
-    <Compile Include="MyPrograms\SetupSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -278,6 +264,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
@@ -291,6 +278,16 @@
     <EmbeddedResource Include="Migrations\201508041116499_First.resx">
       <DependentUpon>201508041116499_First.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AppDbx\AppDbx\AppDbx.csproj">
+      <Project>{5032c5b0-8b1b-4ff0-a372-62604ba4e91f}</Project>
+      <Name>AppDbx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ModelsClassLibrary\ModelsClassLibrary\ModelsClassLibrary.csproj">
+      <Project>{d136798c-8556-4423-9c6c-e3384e99cd26}</Project>
+      <Name>ModelsClassLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -306,7 +303,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2043</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

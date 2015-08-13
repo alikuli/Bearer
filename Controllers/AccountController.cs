@@ -8,8 +8,10 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Bearer.Models;
+
 using System.Data.Entity;
+using ModelsClassLibrary.Models;
+using AppDbx.Models;
 
 
 namespace Bearer.Controllers
