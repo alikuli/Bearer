@@ -10,7 +10,8 @@ using System.Web.Mvc;
 
 using Microsoft.AspNet.Identity;
 using System.Text;
-using AppDbx.Models;
+//using AppDbx.Models;
+using Bearer.Models;
 
 namespace Bearer.Controllers
 {

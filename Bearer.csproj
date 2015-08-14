@@ -175,11 +175,16 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\SetUpsController.cs" />
     <Compile Include="Controllers\StartupController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="DAL\Repositry.cs" />
+    <Compile Include="DAL\Setup\PersonDAL.cs" />
+    <Compile Include="DAL\Setup\SetupDAL.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -187,6 +192,33 @@
     <Compile Include="Migrations\201508041116499_First.Designer.cs">
       <DependentUpon>201508041116499_First.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508140432118_AfterBringingBackDbx.cs" />
+    <Compile Include="Migrations\201508140432118_AfterBringingBackDbx.Designer.cs">
+      <DependentUpon>201508140432118_AfterBringingBackDbx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508140442390_AddedPerson.cs" />
+    <Compile Include="Migrations\201508140442390_AddedPerson.Designer.cs">
+      <DependentUpon>201508140442390_AddedPerson.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508140552574_AddedPersonLanguage.cs" />
+    <Compile Include="Migrations\201508140552574_AddedPersonLanguage.Designer.cs">
+      <DependentUpon>201508140552574_AddedPersonLanguage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508141051541_ChangedToLongAndOtherStuff.cs" />
+    <Compile Include="Migrations\201508141051541_ChangedToLongAndOtherStuff.Designer.cs">
+      <DependentUpon>201508141051541_ChangedToLongAndOtherStuff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508141548572_ChangedCNICfieldOfPerson.cs" />
+    <Compile Include="Migrations\201508141548572_ChangedCNICfieldOfPerson.Designer.cs">
+      <DependentUpon>201508141548572_ChangedCNICfieldOfPerson.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Configuration.cs" />
+    <Compile Include="Models\GlobalValuesVM.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="MyPrograms\GetUser.cs" />
+    <Compile Include="MyPrograms\MyConstants.cs" />
+    <Compile Include="MyPrograms\MyValidators.cs" />
+    <Compile Include="MyPrograms\SetupSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -261,10 +293,14 @@
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\People\Create.cshtml" />
+    <Content Include="Views\People\Delete.cshtml" />
+    <Content Include="Views\People\Details.cshtml" />
+    <Content Include="Views\People\Edit.cshtml" />
+    <Content Include="Views\People\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
@@ -278,12 +314,23 @@
     <EmbeddedResource Include="Migrations\201508041116499_First.resx">
       <DependentUpon>201508041116499_First.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508140432118_AfterBringingBackDbx.resx">
+      <DependentUpon>201508140432118_AfterBringingBackDbx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508140442390_AddedPerson.resx">
+      <DependentUpon>201508140442390_AddedPerson.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508140552574_AddedPersonLanguage.resx">
+      <DependentUpon>201508140552574_AddedPersonLanguage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508141051541_ChangedToLongAndOtherStuff.resx">
+      <DependentUpon>201508141051541_ChangedToLongAndOtherStuff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508141548572_ChangedCNICfieldOfPerson.resx">
+      <DependentUpon>201508141548572_ChangedCNICfieldOfPerson.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AppDbx\AppDbx\AppDbx.csproj">
-      <Project>{5032c5b0-8b1b-4ff0-a372-62604ba4e91f}</Project>
-      <Name>AppDbx</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\ModelsClassLibrary\ModelsClassLibrary\ModelsClassLibrary.csproj">
       <Project>{d136798c-8556-4423-9c6c-e3384e99cd26}</Project>
       <Name>ModelsClassLibrary</Name>

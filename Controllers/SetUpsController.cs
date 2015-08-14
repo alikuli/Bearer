@@ -1,6 +1,7 @@
-﻿using AppDbx.Models;
-
+﻿//using AppDbx.Models;
+using Bearer.Models;
 using Bearer.MyPrograms;
+using ModelsClassLibrary.DAL.Setup;
 using ModelsClassLibrary.Models;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -15,35 +17,40 @@ using System.Web.Mvc;
 namespace Bearer.Controllers
 
 {
-    public class SetUpsController : Controller
+    public class SetUpsController : BaseController
     {
         private ApplicationDbContext db;
         private GlobalValuesVM globalValues;
+        private SetupDAL repo;
+        private string userName=string.Empty;
 
-
+        //------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// This is the constructor. All the variables are initialized here.
+        /// </summary>
         public SetUpsController()
         {
             db = new ApplicationDbContext();
             globalValues = new GlobalValuesVM(db);
+            userName = AliKuli.GetUser.Name(User);
+            repo = new SetupDAL(db, userName );
         }
 
+        //------------------------------------------------------------------------------------------------------------
 
         // GET: SetUps
-        public ActionResult Index(string messageType, string message)
+        public ActionResult Index(string message)
         {
-            if (!string.IsNullOrEmpty(messageType))
+            //This handles the messages
+            //Add a message if the message is not empty
+            if (!string.IsNullOrEmpty(message))
             {
-                if (messageType.ToLower()=="resetmessage")
-                {
-                    ModelState.AddModelError("","The setup has been reset.");
-                }
-
-                if (messageType.ToLower()=="errormessage")
-                {
-                    ModelState.AddModelError("",message);
-                }
+                ModelState.AddModelError("",message);
             }
-            var setupList = db.SetUps.OrderBy(x => x.Description).ToList();
+
+
+            var setupList = repo.FindAll().OrderBy(x => x.Description).ToList();
+            
             List<SetupVM> setupListVM = new List<SetupVM>();
 
             if (setupList != null)
@@ -125,20 +132,40 @@ namespace Bearer.Controllers
             return View(setupListVM);
         }
 
+
+        //------------------------------------------------------------------------------------------------------------
+
         // GET: SetUps/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(long? id)
         {
-            if (id == null)
+
+            SetUp setUp= new SetUp();
+
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                setUp = repo.FindFor(long.Parse(id.ToString()));
+                return View(setUp);
+
             }
-            SetUp setUp = db.SetUps.Find(id);
-            if (setUp == null)
+
+            catch(Exception e)
             {
-                return HttpNotFound();
+                string message = e.Message;
+                
+                if (e.InnerException != null)
+                    message += " SYSTEM ERROR: " + e.InnerException.Message;
+
+                return RedirectToIndexActionErrorHelper("There was a problem. No record was found. ", e);
+
+
             }
-            return View(setUp);
+
+
         }
+
+
+        //------------------------------------------------------------------------------------------------------------
+
 
         // GET: SetUps/Create
         public ActionResult Create()
@@ -155,40 +182,49 @@ namespace Bearer.Controllers
         {
             if (ModelState.IsValid)
             {
-                //check to see if the item already exists... if it does, then fail
-                var itemExists = db.SetUps.FirstOrDefault(x => x.Name == setUp.Name && x.Type == setUp.Type);
-
-                if(itemExists!=null)
+                try
                 {
-                    ModelState.AddModelError("", "This setup already exists!");
-                    return View(setUp);
+                    repo.Create(setUp);
+                    repo.Save();
                 }
-
-                db.SetUps.Add(setUp);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                catch(Exception e)
+                {
+                    ModelState.AddModelError("", "Error getting Edit record: " + e.Message);
+                    if (e.InnerException != null)
+                        ModelState.AddModelError("", "SYSTEM: " + e.InnerException.Message);
+                    
+                }
+                return RedirectToIndexActionHelper("Your Record has been saved!");
             }
-
+            ModelState.AddModelError("", "The model had errors. Try again." );
             return View(setUp);
         }
 
-        // GET: SetUps/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SetUp setUp = db.SetUps.Find(id);
-            if (setUp == null)
-            {
-                return HttpNotFound();
-            }
 
+        //------------------------------------------------------------------------------------------------------------
+
+
+        // GET: SetUps/Edit/5
+        public ActionResult Edit(long? id)
+        {
+            
+            SetUp setUp = new SetUp();
+
+            try
+            {
+                setUp = repo.FindFor(long.Parse(id.ToString()));
+
+            }
+            catch(Exception e)
+            {
+                return RedirectToIndexActionErrorHelper("There was a problem. No record was found. ", e);
+            }
+            
             SetupVM setupVM = new SetupVM();
             setupVM.Id = setUp.Id;
             setupVM.Description = setUp.Description;
             setupVM.Value = setUp.Value;
+
 
             if (setUp.Type==EnumTypes.EmailingMethod)
             {
@@ -205,6 +241,10 @@ namespace Bearer.Controllers
             return View(setupVM);
         }
 
+
+        //------------------------------------------------------------------------------------------------------------
+
+
         // POST: SetUps/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -212,22 +252,25 @@ namespace Bearer.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Value")] SetupVM setUp)
         {
-            if (setUp==null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
 
             if (ModelState.IsValid)
             {
-                var sDb = db.SetUps.FirstOrDefault(s => s.Id == setUp.Id);
+                SetUp sDb = new SetUp();
+                try
+                {
+                    sDb = repo.FindFor(setUp.Id);
+                }
+                catch (Exception e)
+                
+                {
+                    return RedirectToIndexActionErrorHelper("There was a problem. No record was found. ", e);
+
+                }
+
 
                 sDb.Value = setUp.Value;
                 setUp.Description = sDb.Description;
 
-                if (sDb == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
 
                 //CHECK BOOLS
 
@@ -248,10 +291,13 @@ namespace Bearer.Controllers
                         return View(setUp);
 
                     }
+
+
                     if (sDb.Value.Trim().ToLower() == "yes" || sDb.Value.Trim().ToLower() == "true") 
                     {
                         sDb.Value = "true";
                     }
+
                     if (sDb.Value.Trim().ToLower() == "no" ||
                         sDb.Value.Trim().ToLower() == "false")
                     {
@@ -281,44 +327,59 @@ namespace Bearer.Controllers
                 {
                     //Check the emails and URL
                     string incomingEmailAndUrl = sDb.Name;
+                    string message = string.Empty;
 
-                    switch (incomingEmailAndUrl)
+                    try
                     {
-                        case "FromEmailAddress":
-                            if (!AliKuli.Validators.MyValidators.IsValidEmail(sDb.Value))
-                            {
-                                ModelState.AddModelError("", "The FROM Email is not valid!");
-                                return View(setUp);
-                            }
-                            break;
-
-                        case "BccEmailAddress":
-                            if (!AliKuli.Validators.MyValidators.IsValidEmail(sDb.Value))
-                            {
-                                ModelState.AddModelError("", "The BCC Email is not valid!");
-                                return View(setUp);
-                            }
-                            break;
-
-                        case "WebsiteUrl":
-                                if (!AliKuli.Validators.MyValidators.IsValidUrl(sDb.Value))
+                        switch (incomingEmailAndUrl)
+                        {
+                            case "FromEmailAddress":
+                                if (!AliKuli.Validators.MyValidators.IsValidEmail(sDb.Value))
                                 {
-                                    ModelState.AddModelError("", "The URL is not valid!");
-                                    return View(setUp);
+
+                                    message = "The FROM Email is not valid!";
+                                    throw new Exception(message);
+
                                 }
                                 break;
-                        default:
-                            break;
+
+                            case "BccEmailAddress":
+                                if (!AliKuli.Validators.MyValidators.IsValidEmail(sDb.Value))
+                                {
+                                    message = "The BCC Email is not valid!";
+                                    throw new Exception(message);
+
+                                }
+                                break;
+
+                            case "WebsiteUrl":
+                                if (!AliKuli.Validators.MyValidators.IsValidUrl(sDb.Value))
+                                {
+                                    message = "The URL is not valid!";
+                                    throw new Exception(message);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        ModelState.AddModelError("", e.Message);
+                        return View(setUp);
+
                     }
 
                 
                 }
 
+                sDb.ModifiedDate = DateTime.UtcNow;
+                sDb.ModifiedUser = userName;
 
-                db.Entry(sDb).State = EntityState.Modified;
 
                 try
                 {
+                    repo.Update(sDb);
                     db.SaveChanges();
 
 
@@ -327,6 +388,10 @@ namespace Bearer.Controllers
                 catch(Exception e)
                 {
                     ModelState.AddModelError("", "Your answer was not saved. Try again! Exception: " + e.Message);
+
+                    if (e.InnerException != null)
+                        ModelState.AddModelError("", "SYSTEM: " + e.InnerException.Message);
+
                     return View(setUp);
                 }
 
@@ -391,9 +456,9 @@ namespace Bearer.Controllers
                             
                         default:
                             string error="There was a problem updating the Application in switch statement. Please have administrator restart the application to see the update. The application may not work properly.";
-                            ModelState.AddModelError("",error);
-                            break;
+                            throw new Exception(error);
                     }
+                    return RedirectToIndexActionHelper("Record Saved!");
                 }
                 catch (Exception e)
                 {
@@ -401,43 +466,67 @@ namespace Bearer.Controllers
                     return View(setUp);
                 }
 
-                return RedirectToAction("Index");
             }
             return View(setUp);
         }
+
+
+        //------------------------------------------------------------------------------------------------------------
+
 
         // GET: SetUps/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var setup = repo.FindFor(long.Parse(id.ToString()));
+                return View(setup);
             }
-            SetUp setUp = db.SetUps.Find(id);
-            if (setUp == null)
+
+            catch (Exception e)
             {
-                return HttpNotFound();
+                return RedirectToIndexActionErrorHelper("There was a problem.", e);
+
             }
-            return View(setUp);
+
         }
 
+        
+        //------------------------------------------------------------------------------------------------------------
+
+        
+        
         // POST: SetUps/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            SetUp setUp = db.SetUps.Find(id);
-            db.SetUps.Remove(setUp);
-            db.SaveChanges();
-            return ResetHttp();
+            try
+            {
+                repo.Delete(id);
+                return ResetHttp();
+            }
+            catch(Exception e)
+            {
+
+                return RedirectToIndexActionErrorHelper("There was a problem. The Record was not Reset.", e);
+
+            }
+
         }
 
+
+        //------------------------------------------------------------------------------------------------------------
 
         public ActionResult Reset()
         {
             return ResetHttp();
         }
 
+
+
+        //------------------------------------------------------------------------------------------------------------
 
         /// <summary>
         /// This replaces any deleted fields
@@ -450,12 +539,25 @@ namespace Bearer.Controllers
             //db.SetUps.RemoveRange(db.SetUps);
             //db.SaveChanges();
             //add back
-            SetupSetup setup = new SetupSetup(db);
-            setup.Initialize();
-            setup.LoadIntoMemory();
+            SetupSetup setup = new SetupSetup(db,userName);
+            try
+            {
+                setup.Initialize();
+                setup.LoadIntoMemory();
 
-            return RedirectToAction("Index", new { messageType = "resetmessage" });
+            }
+            catch (Exception e)
+            {
+
+                return RedirectToIndexActionErrorHelper("There was a problem. The Record was not Reset", e);
+
+            }
+            return RedirectToIndexActionHelper("There has now been a RESET. Now, you will need to add the values for each of the fields again!");
         }
+
+
+
+        //------------------------------------------------------------------------------------------------------------
 
         /// <summary>
         /// This resets the current field to its orignal value
@@ -465,35 +567,57 @@ namespace Bearer.Controllers
         public ActionResult ResetField(int id)
         {
             if (id == 0)
-                return View("Index", new { messageType="PleaseTryAgain" });
+                return RedirectToIndexActionHelper("Please Try Again. I did not receive any record.");
+
             return ResetFieldHttp(id);
         }
+
+
+
+        //------------------------------------------------------------------------------------------------------------
 
         public ActionResult ResetFieldHttp(int id)
         {
             var s = db.SetUps.FirstOrDefault(x => x.Id == id);
             if (s==null)
-                return View("Index", new { messageType = "PleaseTryAgain" });
+                return RedirectToIndexActionHelper("Please Try Again. A Null value was received");
 
-            db.SetUps.Remove(s);
-            db.SaveChanges();
-            //add back
-            SetupSetup setup = new SetupSetup(db);
             try
             {
-                setup.Initialize(s.Name);
+                repo.Delete(s);
+                repo.Save();
             }
             catch(Exception e)
             {
-                //Error that no option in switch statemeoint found
-                return RedirectToAction("Index", new { messageType = "resetmessage", errormessage=e.Message.ToString()});
+                return RedirectToIndexActionErrorHelper("There was a problem. The Record was not deleted.", e);
+
 
             }
-            setup.LoadIntoMemory();
+            //add back
+            SetupSetup setup = new SetupSetup(db, userName);
+            
+            try
+            {
+                setup.Initialize(s.Name);
+                setup.LoadIntoMemory();
+                return RedirectToIndexActionHelper(string.Format("Field '{0}' Has been Reset",s.Description));
+            }
 
-            return RedirectToAction("Index", new { messageType = "resetmessage" });
+            catch(Exception e)
+            {
+                string message = e.Message;
 
+                if (e.InnerException != null)
+                    message += " SYSTEM ERROR: " + e.InnerException.Message;
+
+                return RedirectToIndexActionErrorHelper("There was a problem. The Record was not Reset",e);
+            }
         }
+
+
+        //------------------------------------------------------------------------------------------------------------
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -502,5 +626,6 @@ namespace Bearer.Controllers
             }
             base.Dispose(disposing);
         }
+
     }
 }

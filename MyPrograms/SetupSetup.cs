@@ -1,5 +1,6 @@
-﻿using AppDbx.Models;
-
+﻿//using AppDbx.Models;
+using Bearer.Models;
+using ModelsClassLibrary.DAL.Setup;
 using ModelsClassLibrary.Models;
 using System;
 using System.Linq;
@@ -11,10 +12,12 @@ namespace Bearer.MyPrograms
     public class SetupSetup
     {
         ApplicationDbContext db;
+        SetupDAL repo;
 
-        public SetupSetup (ApplicationDbContext dbIn)
+        public SetupSetup (ApplicationDbContext dbIn, string user)
 	    {
             db=dbIn;
+            repo = new SetupDAL(db, user);
     	}
 
 
@@ -344,12 +347,15 @@ namespace Bearer.MyPrograms
         }
         protected void AddToSetup(SetUp s)
         {
-            var itemExists = db.SetUps.FirstOrDefault(x => x.Name == s.Name && x.Type == s.Type);
 
-            if (itemExists == null)
+            try
             {
-                db.SetUps.Add(s);
-                db.SaveChanges();
+                repo.Create(s);
+                repo.Save();
+            }
+            catch 
+            {
+                
             }
         }
 

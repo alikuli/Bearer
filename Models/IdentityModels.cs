@@ -6,6 +6,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using ModelsClassLibrary.Models;
+using ModelsClassLibrary.Models.People;
 
 namespace Bearer.Models
 {
@@ -106,6 +108,25 @@ namespace Bearer.Models
             modelBuilder.Entity<SetUp>()
                 .Property(u => u.Name)
                 .HasMaxLength(100);
+             
+            //got this from
+            //This creates a middle table for a many to many relarionship
+            //http://stackoverflow.com/questions/19342908/how-to-create-a-many-to-many-mapping-in-entity-framework
+
+
+            modelBuilder.Entity<PersonLanguage>()
+                .HasKey(c => new { c.PersonId, c.LanguageId });
+
+            modelBuilder.Entity<Person>()
+                .HasMany(c => c.PersonLanguage)
+                .WithRequired()
+                .HasForeignKey(c => c.PersonId);
+
+            modelBuilder.Entity<Language>()
+                .HasMany(c => c.PersonLanguage)
+                .WithRequired()
+                .HasForeignKey(c => c.LanguageId);
+
 
             base.OnModelCreating(modelBuilder);
 
@@ -115,6 +136,8 @@ namespace Bearer.Models
             modelBuilder.Entity<IdentityUserRole>().ToTable("UserRoles");
             modelBuilder.Entity<IdentityUserLogin>().ToTable("UserLogins");
         }
+
+        public System.Data.Entity.DbSet<ModelsClassLibrary.Models.People.Person> People { get; set; }
 
         
 

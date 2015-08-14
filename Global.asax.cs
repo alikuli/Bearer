@@ -1,5 +1,6 @@
 ﻿
-using AppDbx.Models;
+using Bearer.Models;
+//using AppDbx.Models;
 using Bearer.MyPrograms;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -53,9 +54,9 @@ namespace Bearer
             }
 
 
-            SetupSetup setup = new SetupSetup(db);
-            setup.Initialize();
-            setup.LoadIntoMemory();
+            SetupSetup setItUp = new SetupSetup(db, "System");
+            setItUp.Initialize();
+            setItUp.LoadIntoMemory();
 
             ////LOAD ALL THE VARIABLES INTO APPLICTION STATE
             //Application["CompanyName"] = db.SetUps

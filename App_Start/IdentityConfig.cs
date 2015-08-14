@@ -13,7 +13,8 @@ using SendGrid;
 using System.Net.Mail;
 using System.IO;
 using System.Text;
-using AppDbx.Models;
+//using AppDbx.Models;
+using Bearer.Models;
 
 
 namespace Bearer

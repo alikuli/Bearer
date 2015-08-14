@@ -11,7 +11,8 @@ using Microsoft.Owin.Security;
 
 using System.Data.Entity;
 using ModelsClassLibrary.Models;
-using AppDbx.Models;
+using Bearer.Models;
+//using AppDbx.Models;
 
 
 namespace Bearer.Controllers
