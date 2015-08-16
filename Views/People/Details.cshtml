@@ -1,0 +1,250 @@
+﻿@model ModelsClassLibrary.Models.People.Person
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Person</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IdentificationNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdentificationNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FNameTitleCase)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MNameTitleCase)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LNameTitleCase)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Sex)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sex)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SonOfOrWifeOf)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SonOfOrWifeOf)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NameOfFatherOrHusband)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NameOfFatherOrHusband)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HouseNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HouseNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Road)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Road)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.State)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Zip)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Zip)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Country)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Country)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TaxType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TaxType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GeoLat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GeoLat)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GeoLong)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GeoLong)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BlackListed)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BlackListed)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedDateStarted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDateStarted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedUser)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedUser)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifiedDateStart)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifiedDateStart)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifiedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifiedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifiedUser)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifiedUser)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Comment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Comment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Deleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Deleted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeletedByUser)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeletedByUser)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeleteDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeleteDate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

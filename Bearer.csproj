@@ -183,8 +183,9 @@
     <Compile Include="Controllers\StartupController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DAL\Repositry.cs" />
-    <Compile Include="DAL\Setup\PersonDAL.cs" />
-    <Compile Include="DAL\Setup\SetupDAL.cs" />
+    <Compile Include="DAL\PersonDAL.cs" />
+    <Compile Include="DAL\SetupDAL OLD.cs" />
+    <Compile Include="DAL\SetUpDAL.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -212,6 +213,14 @@
     <Compile Include="Migrations\201508141548572_ChangedCNICfieldOfPerson.Designer.cs">
       <DependentUpon>201508141548572_ChangedCNICfieldOfPerson.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508151257167_NewChangesUnknown.cs" />
+    <Compile Include="Migrations\201508151257167_NewChangesUnknown.Designer.cs">
+      <DependentUpon>201508151257167_NewChangesUnknown.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508151747189_MadeFieldsRequiredInDb.cs" />
+    <Compile Include="Migrations\201508151747189_MadeFieldsRequiredInDb.Designer.cs">
+      <DependentUpon>201508151747189_MadeFieldsRequiredInDb.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Configuration.cs" />
     <Compile Include="Models\GlobalValuesVM.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -219,6 +228,7 @@
     <Compile Include="MyPrograms\MyConstants.cs" />
     <Compile Include="MyPrograms\MyValidators.cs" />
     <Compile Include="MyPrograms\SetupSetup.cs" />
+    <Compile Include="MyPrograms\StringHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -328,6 +338,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508141548572_ChangedCNICfieldOfPerson.resx">
       <DependentUpon>201508141548572_ChangedCNICfieldOfPerson.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508151257167_NewChangesUnknown.resx">
+      <DependentUpon>201508151257167_NewChangesUnknown.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508151747189_MadeFieldsRequiredInDb.resx">
+      <DependentUpon>201508151747189_MadeFieldsRequiredInDb.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

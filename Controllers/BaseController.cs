@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -8,18 +9,18 @@ namespace Bearer.Controllers
 {
     public class BaseController:Controller
     {
-        public  RedirectToRouteResult RedirectToIndexActionErrorHelper(string message, Exception e)
+        protected  RedirectToRouteResult RedirectToIndexActionErrorHelper(string message, Exception e)
         {
 
-            message += " Try Again. Error: " + e.Message;
+            message += " Error: " + e.Message;
             if (e.InnerException != null)
-                message += " SYSTEM MSG: " + e.InnerException.Message;
+                message += " *UGLY SYSTEM MSG*: " + e.InnerException.Message;
 
 
             return RedirectToIndexActionHelper(message);
 
         }
-        public  RedirectToRouteResult RedirectToIndexActionHelper(string message)
+        protected  RedirectToRouteResult RedirectToIndexActionHelper(string message)
         {
 
             return RedirectToAction("Index", new { message = message });
@@ -38,6 +39,26 @@ namespace Bearer.Controllers
             return RedirectToAction("AccessDenied", "Security", new { pageUrl = this.Request.RawUrl });
         }
 
+        protected string MakeErrorMesage(string message, Exception e)
+        {
+            StringBuilder sb= new StringBuilder();
+            
+            if(!string.IsNullOrEmpty(message))
+            {
+                sb.Append(message);
+                sb.Append(" ");
+            }
 
+            sb.Append(e.Message);
+
+            if(e.InnerException!=null)
+            {
+                sb.Append(" ");
+                sb.Append(e.InnerException.Message);
+            }
+
+            return sb.ToString();
+                
+        }
     }
 }

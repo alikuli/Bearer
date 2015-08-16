@@ -1,7 +1,7 @@
 ﻿//using AppDbx.Models;
 using Bearer.Models;
 using Bearer.MyPrograms;
-using ModelsClassLibrary.DAL.Setup;
+using Bearer.DAL;
 using ModelsClassLibrary.Models;
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace Bearer.Controllers
     {
         private ApplicationDbContext db;
         private GlobalValuesVM globalValues;
-        private SetupDAL repo;
+        private SetUpDAL repo;
         private string userName=string.Empty;
 
         //------------------------------------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ namespace Bearer.Controllers
             db = new ApplicationDbContext();
             globalValues = new GlobalValuesVM(db);
             userName = AliKuli.GetUser.Name(User);
-            repo = new SetupDAL(db, userName );
+            repo = new SetUpDAL(db, userName);
         }
 
         //------------------------------------------------------------------------------------------------------------
