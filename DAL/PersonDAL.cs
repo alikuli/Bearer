@@ -82,6 +82,37 @@ namespace Bearer.DAL
                 throw;
             }
         }
-        
+
+
+        public override void Delete(Person entity)
+        {
+            //when we delete a person record (Mark Delete= True) we need to do the same to the PersonLanguage record or we will have a lot
+            //of orphan record
+            
+            base.Delete(entity);
+
+            //if you have reached here, then the person record has been marked DELETE.
+            //Now delete do some housekeeping. Delete the PersonLanguage records.
+
+            var pl = new PersonLanguageDAL(db, user).SearchFor(x => x.PersonId == entity.Id);
+
+            if (pl.Count() > 0)
+            {
+                //there are existing child records
+                string currPerson = "";
+                try
+                {
+                    foreach (var item in pl)
+                    {
+                        currPerson = this.FindFor(item.PersonId).FullNameWithId;
+                        new PersonLanguageDAL(db, user).Delete(item.Id);
+                    }
+                }
+                catch
+                {
+                    throw new Exception("Houskeeping for PersonLanguage failed for '{0}'");
+                }
+            }
+        }
     }
 }

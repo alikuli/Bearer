@@ -12,6 +12,7 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using AliKuli.Exceptions;
 
 namespace Bearer.DAL
 {
@@ -41,6 +42,7 @@ namespace Bearer.DAL
 
             try
             {
+                
 
                 entity.CreatedDate = DateTime.UtcNow;
                 entity.CreatedUser = user;
@@ -67,12 +69,12 @@ namespace Bearer.DAL
         public T FindFor(long id, bool deleted=false)
         {
             if (id == 0)
-                throw new Exception("A zero value was passed.");
+                throw new ZeroValueException();
 
             var item = dataTable.Where(x => x.Id == id && x.Deleted == deleted).FirstOrDefault();
 
             if (item == null)
-                throw new Exception("Repository Says: The item was not found. Try Again. ");
+                throw new NoNullAllowedException("Repository Says: The item was not found. Try Again. ");
             
             return item;
         }
@@ -89,7 +91,7 @@ namespace Bearer.DAL
         public T FindFor(T entity, bool deleted = false)
         {
             if(entity==null)
-                throw new Exception("Repository Says: A null value was passed. Try Again.");
+                throw new NoDataException();
 
             return this.FindFor(entity.Id,deleted);
         }
@@ -97,8 +99,11 @@ namespace Bearer.DAL
         //--------------------------------------------------------------------------------------------
         public T FindFor(long? id, bool deleted = false)
         {
+
             try
             {
+                if (id == null)
+                    throw new NoDataException();
                 return this.FindFor(long.Parse(id.ToString()), deleted);
             }
             catch
@@ -112,6 +117,9 @@ namespace Bearer.DAL
         {
             try
             {
+                if (id == null)
+                    throw new NoDataException();
+
                 return await this.FindForAsync(long.Parse(id.ToString()), deleted);
             }
             catch
@@ -124,14 +132,14 @@ namespace Bearer.DAL
         public async Task<T> FindForAsync(long id, bool deleted = false)
         {
             if (id == 0)
-                throw new Exception("A zero value was passed.");
+                throw new ZeroValueException();
 
             try
             {
                 var item = await dataTable.FirstOrDefaultAsync(x => x.Id == id & x.Deleted == deleted);
 
                 if (item == null)
-                    throw new Exception("Repository Says: The record was not found.");
+                    throw new NoNullAllowedException();
 
                 return item;
             }
@@ -147,7 +155,7 @@ namespace Bearer.DAL
         public async Task<T> FindForAsync(T entity, bool deleted = false)
         {
             if (entity == null)
-                throw new Exception("A null value was passed.");
+                throw new NoNullAllowedException();
             try
             {
                 return await this.FindForAsync(entity.Id, deleted);
@@ -247,9 +255,11 @@ namespace Bearer.DAL
 
         public virtual void Update(T entity)
         {
+
             try
             {
-                T oldEntity = this.FindFor(entity.Id);
+                long id = entity.Id;
+                T oldEntity = this.FindFor(id);
                 
                 this.Update(entity, oldEntity);
 
@@ -309,7 +319,7 @@ namespace Bearer.DAL
         {
 
             if (entity == null)
-                throw new Exception("Repository Says: A null value was passed. ");
+                throw new NoNullAllowedException();
 
             //We will never delete anything... we just make Delete True
             entity.Deleted = true;
@@ -323,7 +333,7 @@ namespace Bearer.DAL
             }
             catch
             {
-                throw new Exception("Repository Says: An error happened when trying to Update while Deleting.");
+                throw;
 
             }
             
@@ -362,53 +372,53 @@ namespace Bearer.DAL
             {
                 db.SaveChanges();
             }
-            catch (DbEntityValidationException)
+            catch (DbEntityValidationException e)
             {
-                throw new Exception("Db Entity Validation Exception. Data not saved. Try again or call your systems engineer.");
+                throw new Exception("Db Entity Validation Exception. Data not saved. Try again or call your systems engineer.",e);
             }
 
-            catch (NotSupportedException)
+            catch (NotSupportedException e)
             {
 
-                throw new Exception("Not supported Exception. Data not saved. Try again or call your systems engineer.");
+                throw new Exception("Not supported Exception. Data not saved. Try again or call your systems engineer.",e);
             }
 
 
-            catch (ObjectDisposedException)
+            catch (ObjectDisposedException e)
             {
 
-                throw new Exception("Object Disposed Exception. Data not saved. Try again or call your systems engineer.");
+                throw new Exception("Object Disposed Exception. Data not saved. Try again or call your systems engineer.",e);
 
             }
 
-            catch (InvalidOperationException )
+            catch (InvalidOperationException e)
             {
-                throw new Exception("Invalid Operation Exception. Data not saved. Try again or call your systems engineer.");
+                throw new Exception("Invalid Operation Exception. Data not saved. Try again or call your systems engineer.",e);
             }
 
-            catch (DbUpdateConcurrencyException )
+            catch (DbUpdateConcurrencyException e)
             {
-                throw new Exception("Db Update Concurrency Exception. Data not saved. Try again or call your systems engineer.");
+                throw new Exception("Db Update Concurrency Exception. Data not saved. Try again or call your systems engineer.",e);
             }
 
-            catch (DbUpdateException )
+            catch (DbUpdateException e)
             {
-                throw new Exception("Db Update Exception. Data not saved. Try again or call your systems engineer.");
+                throw new Exception("Db Update Exception. Data not saved. Try again or call your systems engineer.",e);
             }
 
-            catch (EntityException)
+            catch (EntityException e)
             {
-                throw new Exception("Entity Exception. Data not saved. Try again or call your systems engineer.");
+                throw new Exception("Entity Exception. Data not saved. Try again or call your systems engineer.",e);
             }
 
-            catch (DataException)
+            catch (DataException e)
             {
-                throw new Exception("Data Exception. Data not saved. Try again or call your systems engineer.");
+                throw new Exception("Data Exception. Data not saved. Try again or call your systems engineer.",e);
             }
 
-            catch (Exception)
+            catch (Exception e)
             {
-                throw new Exception("General Exception. Data not saved. Try again or call your systems engineer.");
+                throw new Exception("General Exception. Data not saved. Try again or call your systems engineer.",e);
 
             }
         }
@@ -502,6 +512,10 @@ namespace Bearer.DAL
         }
 
 
+        public virtual void Dispose()
+        {
+            db.Dispose();
+        }
 
 
 

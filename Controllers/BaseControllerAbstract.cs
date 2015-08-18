@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace Bearer.Controllers
 {
-    public abstract class BaseController:Controller
+    public class BaseControllerAbstract:Controller
     {
         protected  RedirectToRouteResult RedirectToIndexActionErrorHelper(string message, Exception e)
         {

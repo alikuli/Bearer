@@ -174,16 +174,23 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\AbstractController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseControllerAbstract.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IController.cs" />
+    <Compile Include="Controllers\LanguagesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
+    <Compile Include="Controllers\PersonLanguagesController.cs" />
     <Compile Include="Controllers\SetUpsController.cs" />
     <Compile Include="Controllers\StartupController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="DAL\PersonLanguageDAL.cs" />
     <Compile Include="DAL\Repositry.cs" />
     <Compile Include="DAL\PersonDAL.cs" />
+    <Compile Include="DAL\LanguageDAL.cs" />
     <Compile Include="DAL\SetupDAL OLD.cs" />
     <Compile Include="DAL\SetUpDAL.cs" />
     <Compile Include="Global.asax.cs">
@@ -221,13 +228,27 @@
     <Compile Include="Migrations\201508151747189_MadeFieldsRequiredInDb.Designer.cs">
       <DependentUpon>201508151747189_MadeFieldsRequiredInDb.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508180509113_ChangedKeyOfPersonLanguageToSingleId.cs" />
+    <Compile Include="Migrations\201508180509113_ChangedKeyOfPersonLanguageToSingleId.Designer.cs">
+      <DependentUpon>201508180509113_ChangedKeyOfPersonLanguageToSingleId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Configuration.cs" />
     <Compile Include="Models\GlobalValuesVM.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="MyPrograms\EmailStrategy\EmailContext.cs" />
+    <Compile Include="MyPrograms\EmailStrategy\EmailProviderEnum.cs" />
+    <Compile Include="MyPrograms\EmailStrategy\EmailStrategyAbstract.cs" />
+    <Compile Include="MyPrograms\EmailStrategy\IEmailStrategy.cs" />
+    <Compile Include="MyPrograms\EmailStrategy\SendGridEmailStrategy.cs" />
+    <Compile Include="MyPrograms\EmailStrategy\SmtpEmailStrategy.cs" />
+    <Compile Include="MyPrograms\EmailStrategy\TestEmailStrategy.cs" />
     <Compile Include="MyPrograms\GetUser.cs" />
     <Compile Include="MyPrograms\MyConstants.cs" />
     <Compile Include="MyPrograms\MyValidators.cs" />
     <Compile Include="MyPrograms\SetupSetup.cs" />
+    <Compile Include="MyPrograms\SmsStrategy\SmsContext.cs" />
+    <Compile Include="MyPrograms\SmsStrategy\ISmsStrategy.cs" />
+    <Compile Include="MyPrograms\SmsStrategy\TestSmsStrategy.cs" />
     <Compile Include="MyPrograms\StringHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -308,6 +329,16 @@
     <Content Include="Views\People\Details.cshtml" />
     <Content Include="Views\People\Edit.cshtml" />
     <Content Include="Views\People\Index.cshtml" />
+    <Content Include="Views\Languages\Create.cshtml" />
+    <Content Include="Views\Languages\Delete.cshtml" />
+    <Content Include="Views\Languages\Details.cshtml" />
+    <Content Include="Views\Languages\Edit.cshtml" />
+    <Content Include="Views\Languages\Index.cshtml" />
+    <Content Include="Views\PersonLanguages\Create.cshtml" />
+    <Content Include="Views\PersonLanguages\Delete.cshtml" />
+    <Content Include="Views\PersonLanguages\Details.cshtml" />
+    <Content Include="Views\PersonLanguages\Edit.cshtml" />
+    <Content Include="Views\PersonLanguages\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -344,6 +375,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508151747189_MadeFieldsRequiredInDb.resx">
       <DependentUpon>201508151747189_MadeFieldsRequiredInDb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508180509113_ChangedKeyOfPersonLanguageToSingleId.resx">
+      <DependentUpon>201508180509113_ChangedKeyOfPersonLanguageToSingleId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

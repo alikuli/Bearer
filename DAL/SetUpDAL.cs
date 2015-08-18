@@ -1,4 +1,5 @@
-﻿using Bearer.Models;
+﻿using AliKuli.Exceptions;
+using Bearer.Models;
 using ModelsClassLibrary.Models;
 using System;
 using System.Collections.Generic;
@@ -23,10 +24,10 @@ namespace Bearer.DAL
         {
 
             //Dont allow duplicates
-            var itemExists = this.SearchFor(x => x.Name == entity.Name & x.Type == entity.Type & x.Deleted == false).FirstOrDefault();
+            var itemExists = this.SearchFor(x => x.Name == entity.Name & x.Type == entity.Type).FirstOrDefault();
 
             if (itemExists != null)
-                throw new Exception(string.Format("The item '{0]' already exists! Try again."));
+                throw new NoDuplicateException(string.Format("The item '{0]' already exists! Try again."));
 
             try
             {

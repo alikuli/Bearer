@@ -41,5 +41,10 @@ namespace AliKuli.Validators
                      || uriResult.Scheme == Uri.UriSchemeHttps);
 
         }
+        public static bool IsValidFilePath(string uriName)
+        {
+            return true;
+
+        }
     }
 }

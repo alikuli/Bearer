@@ -175,6 +175,32 @@ namespace Bearer.Models
             {
                 SmtpDomain = string.Empty;
 
+
+
+            }
+            try
+            {
+                EmailTestingDirectory = s.FirstOrDefault(x => x.Name == "EmailTestingDirectory").Value;
+
+            }
+            catch
+            {
+                EmailTestingDirectory = string.Empty;
+
+
+
+            }
+            try
+            {
+                SmsTestingDirectory = s.FirstOrDefault(x => x.Name == "SmsTestingDirectory").Value;
+
+            }
+            catch
+            {
+                SmsTestingDirectory = string.Empty;
+
+
+
             }
 
         }
@@ -194,6 +220,8 @@ namespace Bearer.Models
         public string IsSendBcc { get; set; }
         public string SmtpDomain { get; set; }
 
+        public string EmailTestingDirectory { get; set; }
+        public string SmsTestingDirectory { get; set; }
         public string WebsiteAnchorLink { 
             get 
             { 

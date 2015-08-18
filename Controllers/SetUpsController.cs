@@ -115,6 +115,15 @@ namespace Bearer.Controllers
                            sVM.ApplicationValue = globalValues.SmtpDomain ;
                            break;
 
+                       case "SmsTestingDirectory":
+                           sVM.ApplicationValue = globalValues.SmsTestingDirectory;
+
+                           break;
+                       case "EmailTestingDirectory":
+                           sVM.ApplicationValue = globalValues.EmailTestingDirectory;
+                           break;
+
+
 
 
                        default:
@@ -143,7 +152,7 @@ namespace Bearer.Controllers
 
             try
             {
-                setUp = repo.FindFor(long.Parse(id.ToString()));
+                setUp = repo.FindFor(id);
                 return View(setUp);
 
             }
@@ -212,7 +221,7 @@ namespace Bearer.Controllers
 
             try
             {
-                setUp = repo.FindFor(long.Parse(id.ToString()));
+                setUp = repo.FindFor(id);
 
             }
             catch(Exception e)
@@ -367,10 +376,29 @@ namespace Bearer.Controllers
                     {
                         ModelState.AddModelError("", e.Message);
                         return View(setUp);
-
+                        
                     }
 
-                
+                }
+
+
+                if(sDb.Type==EnumTypes.FilePath)
+                {
+                    //this is used for local testing only... should not work on the web.
+                    try
+                    {
+                        if (!AliKuli.Validators.MyValidators.IsValidFilePath(sDb.Value))
+                        {
+                            string message = "The File Path is not valid!";
+                            throw new Exception(message);
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        ModelState.AddModelError("", e.Message);
+                        return View(setUp);
+
+                    }
                 }
 
                 sDb.ModifiedDate = DateTime.UtcNow;
@@ -387,11 +415,8 @@ namespace Bearer.Controllers
 
                 catch(Exception e)
                 {
-                    ModelState.AddModelError("", "Your answer was not saved. Try again! Exception: " + e.Message);
-
-                    if (e.InnerException != null)
-                        ModelState.AddModelError("", "SYSTEM: " + e.InnerException.Message);
-
+                    string m = MakeErrorMesage("Answer not saved.", e);
+                    ModelState.AddModelError("", m);
                     return View(setUp);
                 }
 
@@ -528,6 +553,12 @@ namespace Bearer.Controllers
 
         //------------------------------------------------------------------------------------------------------------
 
+        //private IQueryable<SetUp> GetAllData()
+        //{
+        //    return repo.FindAll();
+        //}
+
+
         /// <summary>
         /// This replaces any deleted fields
         /// </summary>
@@ -539,6 +570,25 @@ namespace Bearer.Controllers
             //db.SetUps.RemoveRange(db.SetUps);
             //db.SaveChanges();
             //add back
+            try
+            {
+                //we have to add ToList otherwise we get an error that 2 readers are open.
+                var aliveSetup = repo.FindAll().ToList();
+                if (aliveSetup != null)
+                {
+                    foreach (var item in aliveSetup)
+                    {
+                        repo.Delete(item);
+                    }
+                    repo.Save();
+                }
+
+            }
+            catch(Exception e)
+            {
+                return RedirectToIndexActionErrorHelper("There was a problem while deleting. ", e);
+                
+            }
             SetupSetup setup = new SetupSetup(db,userName);
             try
             {
@@ -605,11 +655,6 @@ namespace Bearer.Controllers
 
             catch(Exception e)
             {
-                string message = e.Message;
-
-                if (e.InnerException != null)
-                    message += " SYSTEM ERROR: " + e.InnerException.Message;
-
                 return RedirectToIndexActionErrorHelper("There was a problem. The Record was not Reset",e);
             }
         }
