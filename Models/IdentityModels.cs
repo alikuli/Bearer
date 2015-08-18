@@ -115,7 +115,8 @@ namespace Bearer.Models
 
 
             modelBuilder.Entity<PersonLanguage>()
-                .HasKey(c => new { c.PersonId, c.LanguageId });
+                //.HasKey(c => new { c.PersonId, c.LanguageId });
+                .HasKey(c => c.Id);
 
             modelBuilder.Entity<Person>()
                 .HasMany(c => c.PersonLanguage)
@@ -138,6 +139,10 @@ namespace Bearer.Models
         }
 
         public System.Data.Entity.DbSet<ModelsClassLibrary.Models.People.Person> People { get; set; }
+
+        public System.Data.Entity.DbSet<ModelsClassLibrary.Models.People.Language> Languages { get; set; }
+
+        public System.Data.Entity.DbSet<ModelsClassLibrary.Models.People.PersonLanguage> PersonLanguages { get; set; }
 
         
 

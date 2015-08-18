@@ -1,0 +1,112 @@
+﻿@model IEnumerable<ModelsClassLibrary.Models.People.PersonLanguage>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedDateStarted)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedUser)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ModifiedDateStart)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ModifiedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ModifiedUser)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Comment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Active)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Deleted)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DeletedByUser)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DeleteDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UnDeletedByUser)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UnDeleteDate)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedDateStarted)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedUser)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ModifiedDateStart)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ModifiedDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ModifiedUser)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comment)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Deleted)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DeletedByUser)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DeleteDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnDeletedByUser)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnDeleteDate)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id}) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id}) |
+            @Html.ActionLink("Delete", "Delete", new {  id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,6 +1,6 @@
-﻿//using AppDbx.Models;
+﻿using Bearer.DAL;
+//using AppDbx.Models;
 using Bearer.Models;
-using ModelsClassLibrary.DAL.Setup;
 using ModelsClassLibrary.Models;
 using System;
 using System.Linq;
@@ -12,12 +12,12 @@ namespace Bearer.MyPrograms
     public class SetupSetup
     {
         ApplicationDbContext db;
-        SetupDAL repo;
+        SetUpDAL repo;
 
         public SetupSetup (ApplicationDbContext dbIn, string user)
 	    {
             db=dbIn;
-            repo = new SetupDAL(db, user);
+            repo = new SetUpDAL(db, user);
     	}
 
 
@@ -162,7 +162,25 @@ namespace Bearer.MyPrograms
             s.Value = "";
             AddToSetup(s);
         }
-        public void Initialize(string theField="")
+        public void AddSmsTestDirectory()
+        {
+            SetUp s = new SetUp();
+            s.Name = "SmsTestingDirectory";
+            s.Description = "SMS Testing Directory: test SMS Land here";
+            s.Type = EnumTypes.FilePath;
+            s.Value = @"c:\TestSms\";
+            AddToSetup(s);
+        }
+        public void AddEmailTestDirectory()
+        {
+            SetUp s = new SetUp();
+            s.Name = "EmailTestingDirectory";
+            s.Description = "Email Testing Directory: Test emails land here.";
+            s.Type = EnumTypes.FilePath;
+            s.Value = @"c:\TestEmails\"; 
+            AddToSetup(s);
+        }
+        public void Initialize(string theField = "")
         {
             if (string.IsNullOrEmpty(theField))
             {
@@ -182,6 +200,8 @@ namespace Bearer.MyPrograms
                 AddUseSendgridOrSmtp();
                 AddSmtpPort();
                 AddSmtpDomain();
+                AddSmsTestDirectory();
+                AddEmailTestDirectory();
             }
             else
             {
@@ -246,6 +266,13 @@ namespace Bearer.MyPrograms
                             break;
                         case "smtpdomain":
                             AddSmtpDomain();
+                            break;
+
+                        case "SmsTestingDirectory":
+                            AddSmsTestDirectory();
+                            break;
+                        case "EmailTestingDirectory":
+                            AddEmailTestDirectory();
                             break;
 
                         default:
