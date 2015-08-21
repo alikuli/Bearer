@@ -1,5 +1,8 @@
-﻿//using AppDbx.Models;
+﻿using AliKuli;
+using Bearer.DAL;
+//using AppDbx.Models;
 using Bearer.Models;
+using Bearer.MyPrograms.SetupStrategy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +19,11 @@ namespace Bearer.Controllers
         // GET: Startup
         public ActionResult Index()
         {
-            var startUpValue = db.SetUps.FirstOrDefault(x => x.Name == "ShowStartUpScreenOnStartup");
-            if (startUpValue.Value.Trim().ToLower() == "yes")
+            //var startUpValue = db.SetUps.FirstOrDefault(x => x.Name == "ShowStartUpScreenOnStartup");
+            //string startUpValue = new ShowStartUpScreenOnStartupStrategy(db, AliKuli.GetUser.Name).GetFromTable();
+            string userName = GetSet.Name();
+            string startupValue = new ShowStartUpScreenOnStartupStrategy(new SetUpDAL(db, userName), userName).Value();
+            if (startupValue.Trim().ToLower() == "yes")
                 return RedirectToAction("Index", "SetUps");
             else
                 return RedirectToAction("Index", "Home");

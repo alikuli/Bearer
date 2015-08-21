@@ -26,7 +26,7 @@ namespace Bearer.Controllers
         private static string GetUser()
         {
             StringBuilder sb = new StringBuilder();
-            string s = AliKuli.GetUser.Name(null);
+            string s = AliKuli.GetSet.Name(null);
             sb.Append(s);
             return s.ToString();
         }

@@ -1,4 +1,5 @@
 ﻿
+using Bearer.DAL;
 using Bearer.Models;
 //using AppDbx.Models;
 using Bearer.MyPrograms;
@@ -53,10 +54,18 @@ namespace Bearer
                 userManager.AddToRole(user.Id, role);
             }
 
+            try
+            {
+                new SetUpDAL(db, userName).InitializeSetUp();
+            }
+            catch
+            {
 
-            SetupSetup setItUp = new SetupSetup(db, "System");
-            setItUp.Initialize();
-            setItUp.LoadIntoMemory();
+            }
+
+            //SetupInitialize setItUp = new SetupInitialize(db, "System");
+            //setItUp.Initialize();
+            //setItUp.LoadIntoMemory();
 
             ////LOAD ALL THE VARIABLES INTO APPLICTION STATE
             //Application["CompanyName"] = db.SetUps

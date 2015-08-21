@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 
 
 namespace Bearer.DAL
@@ -75,6 +76,9 @@ namespace Bearer.DAL
 
                 }
 
+
+                //create the selectList
+                
                 base.Create(entity);
             }
             catch
@@ -114,5 +118,18 @@ namespace Bearer.DAL
                 }
             }
         }
+
+        public SelectList SelectList()
+        {
+            return (SelectList)base.FindAll()
+                .Select(x => new
+                {
+                    Text = x.FullNameWithId,
+                    Value = x.Id
+                })
+                .OrderBy(x => x.Text);
+        }
+
+
     }
 }

@@ -174,12 +174,13 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Controllers\AbstractController.cs" />
+    <Compile Include="Controllers\AbstractAndOtherControllers\AbstractController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\BaseControllerAbstract.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\AddressesController.cs" />
+    <Compile Include="Controllers\AbstractAndOtherControllers\BaseControllerAbstract.cs" />
+    <Compile Include="Controllers\AbstractAndOtherControllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\IController.cs" />
+    <Compile Include="Controllers\AbstractAndOtherControllers\IController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
@@ -187,6 +188,16 @@
     <Compile Include="Controllers\SetUpsController.cs" />
     <Compile Include="Controllers\StartupController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="DAL\AddressDAL.cs" />
+    <Compile Include="Migrations\201508190648400_ChangedTheAddressInPersonToAClass.cs" />
+    <Compile Include="Migrations\201508190648400_ChangedTheAddressInPersonToAClass.Designer.cs">
+      <DependentUpon>201508190648400_ChangedTheAddressInPersonToAClass.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508190650365_AddedAddressBack.cs" />
+    <Compile Include="Migrations\201508190650365_AddedAddressBack.Designer.cs">
+      <DependentUpon>201508190650365_AddedAddressBack.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IRepositry.cs" />
     <Compile Include="DAL\PersonLanguageDAL.cs" />
     <Compile Include="DAL\Repositry.cs" />
     <Compile Include="DAL\PersonDAL.cs" />
@@ -232,9 +243,14 @@
     <Compile Include="Migrations\201508180509113_ChangedKeyOfPersonLanguageToSingleId.Designer.cs">
       <DependentUpon>201508180509113_ChangedKeyOfPersonLanguageToSingleId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508181026141_AddressAddedAndPersonChanged.cs" />
+    <Compile Include="Migrations\201508181026141_AddressAddedAndPersonChanged.Designer.cs">
+      <DependentUpon>201508181026141_AddressAddedAndPersonChanged.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Configuration.cs" />
-    <Compile Include="Models\GlobalValuesVM.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\GlobalValuesVM.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="MyPrograms\Defaults.cs" />
     <Compile Include="MyPrograms\EmailStrategy\EmailContext.cs" />
     <Compile Include="MyPrograms\EmailStrategy\EmailProviderEnum.cs" />
     <Compile Include="MyPrograms\EmailStrategy\EmailStrategyAbstract.cs" />
@@ -242,14 +258,47 @@
     <Compile Include="MyPrograms\EmailStrategy\SendGridEmailStrategy.cs" />
     <Compile Include="MyPrograms\EmailStrategy\SmtpEmailStrategy.cs" />
     <Compile Include="MyPrograms\EmailStrategy\TestEmailStrategy.cs" />
-    <Compile Include="MyPrograms\GetUser.cs" />
-    <Compile Include="MyPrograms\MyConstants.cs" />
+    <Compile Include="MyPrograms\GetSet.cs" />
     <Compile Include="MyPrograms\MyValidators.cs" />
     <Compile Include="MyPrograms\SetupSetup.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\BccMailStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\CompanyNameSetupStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\DefaultPageSizeStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\EmailTestingDirectoryStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\GlobalSetupValues.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\ISetupStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\SetupContext.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\SetupEnum.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\SetupStrategyAbstract.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\FromEmailAddressStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\IsSendBccStrategy.cs" />
+    <Compile Include="MyPrograms\Misc\SaveCompanyNameToRequest.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\SendGridOrSmtpStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\SendGridPasswordStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\SendGridUserNameStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\ShowStartUpScreenOnStartupStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\SmsTestingDirectoryStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\SmtpDomainStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\SmtpPasswordStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\SmtpPortStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\SmtpServerStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\SmtpUserStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\UnknownStrategy.cs" />
+    <Compile Include="MyPrograms\SetupStrategy\strategies\WebsiteUrlStrategy.cs" />
     <Compile Include="MyPrograms\SmsStrategy\SmsContext.cs" />
     <Compile Include="MyPrograms\SmsStrategy\ISmsStrategy.cs" />
     <Compile Include="MyPrograms\SmsStrategy\TestSmsStrategy.cs" />
     <Compile Include="MyPrograms\StringHelpers.cs" />
+    <Compile Include="MyPrograms\ValidatorStrategy\IValidator.cs" />
+    <Compile Include="MyPrograms\ValidatorStrategy\Strategies\BooleanStrategy.cs" />
+    <Compile Include="MyPrograms\ValidatorStrategy\Strategies\FilePathStrategy.cs" />
+    <Compile Include="MyPrograms\ValidatorStrategy\Strategies\EmailingAddressStrategy.cs" />
+    <Compile Include="MyPrograms\ValidatorStrategy\Strategies\EmailingMethodStrategy.cs" />
+    <Compile Include="MyPrograms\ValidatorStrategy\Strategies\IntegerStrategy.cs" />
+    <Compile Include="MyPrograms\ValidatorStrategy\Strategies\UnknownStrategy.cs" />
+    <Compile Include="MyPrograms\ValidatorStrategy\Strategies\StringStrategy.cs" />
+    <Compile Include="MyPrograms\ValidatorStrategy\ValidatorAbstract.cs" />
+    <Compile Include="MyPrograms\ValidatorStrategy\ValidatorContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -327,7 +376,6 @@
     <Content Include="Views\People\Create.cshtml" />
     <Content Include="Views\People\Delete.cshtml" />
     <Content Include="Views\People\Details.cshtml" />
-    <Content Include="Views\People\Edit.cshtml" />
     <Content Include="Views\People\Index.cshtml" />
     <Content Include="Views\Languages\Create.cshtml" />
     <Content Include="Views\Languages\Delete.cshtml" />
@@ -339,6 +387,7 @@
     <Content Include="Views\PersonLanguages\Details.cshtml" />
     <Content Include="Views\PersonLanguages\Edit.cshtml" />
     <Content Include="Views\PersonLanguages\Index.cshtml" />
+    <Content Include="Views\People\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -378,6 +427,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508180509113_ChangedKeyOfPersonLanguageToSingleId.resx">
       <DependentUpon>201508180509113_ChangedKeyOfPersonLanguageToSingleId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508181026141_AddressAddedAndPersonChanged.resx">
+      <DependentUpon>201508181026141_AddressAddedAndPersonChanged.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508190648400_ChangedTheAddressInPersonToAClass.resx">
+      <DependentUpon>201508190648400_ChangedTheAddressInPersonToAClass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508190650365_AddedAddressBack.resx">
+      <DependentUpon>201508190650365_AddedAddressBack.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

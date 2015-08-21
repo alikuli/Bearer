@@ -17,7 +17,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink(AliKuli.GlobalSetupValues.CompanyName, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink(AliKuli.Misc.WebRequests.CompanyName, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -28,6 +28,7 @@
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                     <li>@Html.ActionLink("Person", "Index", "People")</li>
                     <li>@Html.ActionLink("Languages", "Index", "Languages")</li>
+                    <li>@Html.ActionLink("PersonLang", "Index", "PersonLanguages")</li>
                     <li>@Html.ActionLink("PersonLang", "Index", "PersonLanguages")</li>
 
                     @{
@@ -48,7 +49,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.UtcNow.Year - @AliKuli.GlobalSetupValues.CompanyName</p>
+            <p>&copy; @DateTime.UtcNow.Year - @AliKuli.Misc.WebRequests.CompanyName</p>
         </footer>
     </div>
 

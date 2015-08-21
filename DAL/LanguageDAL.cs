@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Bearer.DAL
 {
@@ -75,5 +76,18 @@ namespace Bearer.DAL
                 throw;
             }
         }
+
+        public SelectList SelectList()
+        {
+            return (SelectList)base.FindAll()
+                .Select(x => new
+                {
+                    Text = x.Name,
+                    Value = x.Id
+                })
+                .OrderBy(x => x.Text);
+
+        }
+
     }
 }

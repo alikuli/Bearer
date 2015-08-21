@@ -8,6 +8,7 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using ModelsClassLibrary.Models;
 using ModelsClassLibrary.Models.People;
+using ModelsClassLibrary.Models.AddressNS;
 
 namespace Bearer.Models
 {
@@ -143,6 +144,8 @@ namespace Bearer.Models
         public System.Data.Entity.DbSet<ModelsClassLibrary.Models.People.Language> Languages { get; set; }
 
         public System.Data.Entity.DbSet<ModelsClassLibrary.Models.People.PersonLanguage> PersonLanguages { get; set; }
+
+        public System.Data.Entity.DbSet<ModelsClassLibrary.Models.AddressNS.Address> Addresses { get; set; }
 
         
 

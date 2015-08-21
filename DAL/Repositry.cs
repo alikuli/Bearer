@@ -344,7 +344,7 @@ namespace Bearer.DAL
 
 
 
-        public async Task DeleteAsync(long id)
+        public  async Task DeleteAsync(long id)
         {
             try
             {
@@ -506,10 +506,18 @@ namespace Bearer.DAL
 
 
         //--------------------------------------------------------------------------------------------
-        public Task DeleteAsync(T entity)
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task DeleteAsync(T entity)
+        //{
+        //    try
+        //    {
+        //        var item = await this.FindForAsync(id);
+        //        this.Delete(item);
+        //    }
+        //    catch
+        //    {
+        //        throw;
+        //    }
+        //}
 
 
         public virtual void Dispose()
@@ -517,7 +525,41 @@ namespace Bearer.DAL
             db.Dispose();
         }
 
+        public ApplicationDbContext GetDb
+        {
+            get { return db; }
+        }
+
+        public string GetUser
+        {
+            get { return user; }
+        }
 
 
+
+        //public virtual System.Web.Mvc.SelectList SelectList(T entity)
+        //{
+        //    System.Web.Mvc.SelectList selectList= dataTable.Select(x=>new{
+        //        Value= x.Id,
+        //        Text=x.
+
+
+        //    })
+
+        //    return (System.Web.Mvc.SelectList)this.FindAll();
+        //}
+
+        //public async virtual Task<System.Web.Mvc.SelectList> SelectListAsync(T entity)
+        //{
+
+        //    return await (System.Web.Mvc.SelectList) this.FindAllAsync(;
+
+        //}
+
+
+        //public Task DeleteAsync(T entity)
+        //{
+        //    return this.Delete(entity);
+        //}
     }
 }
