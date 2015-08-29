@@ -55,6 +55,12 @@ namespace Bearer.Controllers
         // GET: /Manage/Index
         public ActionResult Index(ManageMessageId? message)
         {
+
+            //The Index action method in Manage controller sets the status message based on your previous action and provides links to change your local password or add a local account. 
+            //The Index method also displays the state or your 2FA phone number, external logins, 2FA enabled, and remember 2FA method for this browser(explained later). 
+            //Clicking on your user ID (email) in the title bar doesn't pass a message. 
+            //Clicking on the Phone Number : remove link passes Message=RemovePhoneSuccess as a query string.
+
             //ViewBag.StatusMessage =
             //    message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
             //    : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
@@ -103,6 +109,14 @@ namespace Bearer.Controllers
 
         //
         // GET: /Manage/AddPhoneNumber
+        /// <summary>
+        /// The GenerateChangePhoneNumberTokenAsync method generates the security token which will be set in the SMS message.  
+        /// If the SMS service has been configured, the token is sent as the string "Your security code is <token>". 
+        /// The SmsService.SendAsync method to is called asynchronously,  then the app is redirected to the VerifyPhoneNumber action method 
+        /// (which displays the following dialog), where you can enter the verification code.
+        /// Once you enter the code and click submit, the code is posted to the HTTP POST VerifyPhoneNumber action method.
+        /// </summary>
+        /// <returns></returns>
         public ActionResult AddPhoneNumber()
         {
             return View();
@@ -110,6 +124,14 @@ namespace Bearer.Controllers
 
         //
         // POST: /Manage/AddPhoneNumber
+        /// <summary>
+        /// The GenerateChangePhoneNumberTokenAsync method generates the security token which will be set in the SMS message.  
+        /// If the SMS service has been configured, the token is sent as the string "Your security code is <token>". 
+        /// The SmsService.SendAsync method to is called asynchronously,  then the app is redirected to the VerifyPhoneNumber action method, 
+        /// where you can enter the verification code.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
@@ -181,12 +203,47 @@ namespace Bearer.Controllers
             {
                 return View(model);
             }
+            //The ChangePhoneNumberAsync method checks the posted security code. 
+            //If the code is correct, the phone number is added to the PhoneNumber field of the AspNetUsers table. 
             var result = await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId(), model.PhoneNumber, model.Code);
+
+            //If that call is successful, the  SignInAsync method is called:
             if (result.Succeeded)
             {
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                 if (user != null)
                 {
+
+                     //The isPersistent parameter sets whether the authentication session is persisted across multiple requests.
+
+                    //When you change your security profile, a new security stamp is generated and stored in the SecurityStamp field of the AspNetUsers table. 
+                    //Note, the SecurityStamp field is different from the security cookie. 
+                    //The security cookie is not stored in the AspNetUsers table (or anywhere else in the Identity DB). 
+                    //The security cookie token is self-signed using DPAPI and is created with the UserId, SecurityStamp and expiration time information.
+
+                    //The cookie middleware checks the cookie on each request. 
+                    //The SecurityStampValidator method in the Startup class hits the DB and checks security stamp periodically, as specified with the validateInterval. 
+                    //This only happens every 30 minutes (in our sample) unless you change your security profile. //
+                    //The 30 minute interval was chosen to minimize trips to the database. 
+
+                    //The SignInAsync method needs to be called when any change is made to the security profile. 
+                    //When the security profile changes, the database is updates the SecurityStamp field, and without calling the SignInAsync 
+                    //method you would stay logged in only until the next time the OWIN pipeline hits the database (the validateInterval). 
+                    //You can test this by changing the SignInAsync method to return immediately, and setting the cookie validateInterval 
+                    //property from 30 minutes to 5 seconds:
+
+                    //private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+                    //{
+                    //    // Clear the temporary cookies used for external and two factor sign ins
+                    //    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie,
+                    //       DefaultAuthenticationTypes.TwoFactorCookie);
+                    //    AuthenticationManager.SignIn(new AuthenticationProperties
+                    //    {
+                    //        IsPersistent = isPersistent
+                    //    },
+                    //       await user.GenerateUserIdentityAsync(UserManager));
+                    //}
+
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
                 return RedirectToAction("Index", new { Message = ManageMessageId.AddPhoneSuccess });

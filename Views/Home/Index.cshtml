@@ -3,7 +3,128 @@
 }
 
 <div class="jumbotron text-center">
-     <h1>@AliKuli.GlobalSetupValues.CompanyName</h1>
-    <p>IP Solution</p>
+    <h1>@AliKuli.Misc.WebRequests.CompanyName</h1>
+    <p>Bearer Solution</p>
+</div>
+
+<div class="container">
+    <div class="row text-center">
+        <h1>Menu</h1>  
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-2">
+        <div><h2>Menu 1</h2></div>
+        <div class="row">
+            <ul>
+                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <li>@Html.ActionLink("About", "About", "Home")</li>
+                <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                <li>@Html.ActionLink("Person", "Index", "People")</li>
+                <li>@Html.ActionLink("Languages", "Index", "Languages")</li>
+                <li>@Html.ActionLink("PersonLang", "Index", "PersonLanguages")</li>
+                <li>@Html.ActionLink("Country", "Index", "Countries")</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div> <h2>Menu 2</h2></div>
+        @{
+            <ul>
+                <li>@Html.ActionLink("Address", "Index", "Addresses")</li>
+                @*//if (User.IsInRole(AliKuli.MyConstants.AdminConst))*@
+                @*@if (User.IsInRole("Administrator"))*@
+                @if (User.IsInRole(AliKuli.MyConstants.AdminConst))
+                {
+
+                    <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                    <li>@Html.ActionLink("Setup", "Index", "Setups")</li>
+                }
+            </ul>
+        }
+
+    </div>
+    <div class="col-lg-2">
+        <div> <h2>Menu 3</h2></div>
+        @{
+            <ul>
+                <li>Test</li>
+                <li>Test</li>
+                <li>Test</li>
+                @*//if (User.IsInRole(AliKuli.MyConstants.AdminConst))*@
+                @*@if (User.IsInRole("Administrator"))*@
+                @if (User.IsInRole(AliKuli.MyConstants.AdminConst))
+                {
+
+                    <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                    <li>@Html.ActionLink("Setup", "Index", "Setups")</li>
+                }
+            </ul>
+        }
+
+    </div>
+
+
+    <div class="col-lg-2">
+        <div> <h2>Menu 4</h2></div>
+        @{
+            <ul>
+                <li>Test</li>
+                <li>Test</li>
+                <li>Test</li>
+                @*//if (User.IsInRole(AliKuli.MyConstants.AdminConst))*@
+                @*@if (User.IsInRole("Administrator"))*@
+                @if (User.IsInRole(AliKuli.MyConstants.AdminConst))
+                {
+
+                    <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                    <li>@Html.ActionLink("Setup", "Index", "Setups")</li>
+                }
+            </ul>
+        }
+
+    </div>
+
+    <div class="col-lg-2">
+        <div> <h2>Menu 5</h2></div>
+        @{
+            <ul>
+                <li>Test</li>
+                <li>Test</li>
+                <li>Test</li>
+                @*//if (User.IsInRole(AliKuli.MyConstants.AdminConst))*@
+                @*@if (User.IsInRole("Administrator"))*@
+                @if (User.IsInRole(AliKuli.MyConstants.AdminConst))
+                {
+
+                    <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                    <li>@Html.ActionLink("Setup", "Index", "Setups")</li>
+                }
+            </ul>
+        }
+
+    </div>
+
+    <div class="col-lg-2">
+        <div> <h2>Menu 6</h2></div>
+        @{
+            <ul>
+                <li>Test</li>
+                <li>Test</li>
+                <li>Test</li>
+                @*//if (User.IsInRole(AliKuli.MyConstants.AdminConst))*@
+                @*@if (User.IsInRole("Administrator"))*@
+                @if (User.IsInRole(AliKuli.MyConstants.AdminConst))
+                {
+
+                    <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                    <li>@Html.ActionLink("Setup", "Index", "Setups")</li>
+                }
+            </ul>
+        }
+
+    </div>
+
 </div>
 

@@ -8,12 +8,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 
 
 namespace Bearer.DAL
 {
     public class PersonDAL : Repositry<Person>
     {
+         
+
 
         private ApplicationDbContext db;
         private string user;
@@ -24,6 +27,7 @@ namespace Bearer.DAL
             this.db = _db;
             this.user = user;
         }
+
 
         public override void Create(Person entity)
         {
@@ -75,6 +79,9 @@ namespace Bearer.DAL
 
                 }
 
+
+                //create the selectList
+                
                 base.Create(entity);
             }
             catch
@@ -114,5 +121,16 @@ namespace Bearer.DAL
                 }
             }
         }
+
+        public IEnumerable<SelectListItem> SelectListAddress()
+        {
+            //new SelectList(addressList, "Id", "Name", selectBoxInitialValue);
+            AddressDAL addDAL = new AddressDAL(db, user);
+
+            var addressList = addDAL.SelectList();
+            return addressList??new List<SelectListItem> ();
+        }
+
+
     }
 }

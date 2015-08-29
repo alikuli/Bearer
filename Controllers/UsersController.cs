@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 using System.Text;
 //using AppDbx.Models;
 using Bearer.Models;
+using ModelsClassLibrary.Models;
 
 namespace Bearer.Controllers
 {
@@ -129,7 +130,7 @@ namespace Bearer.Controllers
                 userDb.PhoneNumberConfirmed = user.PhoneNumberConfirmed;
                 //userDb.UserName = user.UserName;
 
-                userDb.ModifiedDate = DateTime.UtcNow;
+                userDb.ModifiedDate = new DateTimeAdapter().UtcNow;
                 userDb.ModifiedUser = User.Identity.Name;
 
                 db.Entry(userDb).State = EntityState.Modified;
@@ -202,7 +203,7 @@ namespace Bearer.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                userDb.LastLogin=DateTime.UtcNow;
+                userDb.LastLogin = new DateTimeAdapter().UtcNow;
                 userDb.NoOfLogins++;
                 userDb.IpAddressOfLastLogin = Request.UserHostAddress;
 
@@ -229,7 +230,7 @@ namespace Bearer.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            userDb.LastLockout= DateTime.UtcNow;
+            userDb.LastLockout = new DateTimeAdapter().UtcNow;
             db.Entry(userDb).State = EntityState.Modified;
             db.SaveChangesAsync();
 
@@ -254,7 +255,7 @@ namespace Bearer.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            userDb.LastSignInFailure = DateTime.UtcNow;
+            userDb.LastSignInFailure = new DateTimeAdapter().UtcNow;
             db.Entry(userDb).State = EntityState.Modified;
             db.SaveChanges();
             string showInvalidLoginError = "true";

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using AliKuli.Exceptions;
-
+using AliKuli.Extentions;
 
 namespace Bearer.Controllers
 {
@@ -39,7 +39,7 @@ namespace Bearer.Controllers
         private static string GetUser()
         {
             StringBuilder sb = new StringBuilder();
-            string s = AliKuli.GetUser.Name(null);
+            string s = AliKuli.GetSet.Name(null);
             sb.Append(s);
             return s.ToString();
         }

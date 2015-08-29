@@ -13,6 +13,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using AliKuli.Exceptions;
+using ModelsClassLibrary.Models;
+using System.Text;
+using System.Diagnostics;
 
 namespace Bearer.DAL
 {
@@ -42,9 +45,9 @@ namespace Bearer.DAL
 
             try
             {
-                
 
-                entity.CreatedDate = DateTime.UtcNow;
+
+                entity.CreatedDate = new DateTimeAdapter().UtcNow;
                 entity.CreatedUser = user;
                 entity.Deleted = false;
                 entity.Active = true;
@@ -152,7 +155,7 @@ namespace Bearer.DAL
 
         //--------------------------------------------------------------------------------------------
 
-        public async Task<T> FindForAsync(T entity, bool deleted = false)
+        public async virtual Task<T> FindForAsync(T entity, bool deleted = false)
         {
             if (entity == null)
                 throw new NoNullAllowedException();
@@ -190,7 +193,7 @@ namespace Bearer.DAL
         //--------------------------------------------------------------------------------------------
 
 
-        public async Task<IList<T>> FindAllAsync(bool deleted = false)
+        public virtual async Task<IList<T>> FindAllAsync(bool deleted = false)
         {
             try
             {
@@ -229,7 +232,7 @@ namespace Bearer.DAL
             {
                 //all the common variables are updated
                 //New data
-                entity.ModifiedDate = DateTime.UtcNow;
+                entity.ModifiedDate = new DateTimeAdapter().UtcNow;
                 entity.ModifiedUser = user;
 
                 //old Data
@@ -324,7 +327,7 @@ namespace Bearer.DAL
             //We will never delete anything... we just make Delete True
             entity.Deleted = true;
             entity.DeletedByUser = user;
-            entity.DeleteDate = DateTime.UtcNow;
+            entity.DeleteDate = new DateTimeAdapter().UtcNow;
             entity.Active = false;
 
             try
@@ -344,7 +347,7 @@ namespace Bearer.DAL
 
 
 
-        public async Task DeleteAsync(long id)
+        public  async Task DeleteAsync(long id)
         {
             try
             {
@@ -360,7 +363,16 @@ namespace Bearer.DAL
 
         public virtual IQueryable<T> SearchFor(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
         {
-            return dataTable.Where(predicate).Where(x=>x.Deleted==false);
+            try
+            {
+                IQueryable<T> z=dataTable.Where(predicate).Where(x => x.Deleted == false);
+                var theList = dataTable.Where(predicate).Where(x => x.Deleted == false).ToList();
+                return z;
+            }
+            catch 
+            { 
+                throw; 
+            }
         }
 
         //--------------------------------------------------------------------------------------------
@@ -431,8 +443,23 @@ namespace Bearer.DAL
             {
                 await db.SaveChangesAsync();
             }
-            catch (DbEntityValidationException)
+            catch (DbEntityValidationException dbEx)
             {
+                StringBuilder sb = new StringBuilder();
+                foreach (var validationErrors in dbEx.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        string s = string.Format("Property: {0} Error: {1}",
+                                                validationError.PropertyName,
+                                                validationError.ErrorMessage);
+                        sb.Append(s);
+                        Trace.TraceInformation("Property: {0} Error: {1}",
+                                                validationError.PropertyName,
+                                                validationError.ErrorMessage);
+                    }
+                }
+                string finalError = sb.ToString();
                 throw new Exception("Db Entity Validation Exception. Data not saved. Try again or call your systems engineer.");
             }
 
@@ -506,10 +533,18 @@ namespace Bearer.DAL
 
 
         //--------------------------------------------------------------------------------------------
-        public Task DeleteAsync(T entity)
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task DeleteAsync(T entity)
+        //{
+        //    try
+        //    {
+        //        var item = await this.FindForAsync(id);
+        //        this.Delete(item);
+        //    }
+        //    catch
+        //    {
+        //        throw;
+        //    }
+        //}
 
 
         public virtual void Dispose()
@@ -517,7 +552,41 @@ namespace Bearer.DAL
             db.Dispose();
         }
 
+        public ApplicationDbContext GetDb
+        {
+            get { return db; }
+        }
+
+        public string GetUser
+        {
+            get { return user; }
+        }
 
 
+
+        //public virtual System.Web.Mvc.SelectList SelectList(T entity)
+        //{
+        //    System.Web.Mvc.SelectList selectList= dataTable.Select(x=>new{
+        //        Value= x.Id,
+        //        Text=x.
+
+
+        //    })
+
+        //    return (System.Web.Mvc.SelectList)this.FindAll();
+        //}
+
+        //public async virtual Task<System.Web.Mvc.SelectList> SelectListAsync(T entity)
+        //{
+
+        //    return await (System.Web.Mvc.SelectList) this.FindAllAsync(;
+
+        //}
+
+
+        //public Task DeleteAsync(T entity)
+        //{
+        //    return this.Delete(entity);
+        //}
     }
 }

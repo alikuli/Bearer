@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+using AliKuli.Extentions;
 
 namespace Bearer.DAL
 {
@@ -26,12 +28,14 @@ namespace Bearer.DAL
 
         public override void Create(Language entity)
         {
-            var found = this.SearchFor(x => x.Name == entity.Name).FirstOrDefault();
+            var found = this.SearchFor(x => x.Name.ToLower() == entity.Name.ToLower()).FirstOrDefault();
 
             try
             {
                 if (found !=null)
                     throw new NoDuplicateException();
+
+                entity.Name = entity.Name.ToTitleCase();
                 base.Create(entity);
             }
             catch
@@ -75,5 +79,18 @@ namespace Bearer.DAL
                 throw;
             }
         }
+
+        public SelectList SelectList()
+        {
+            return (SelectList)base.FindAll()
+                .Select(x => new
+                {
+                    Text = x.Name,
+                    Value = x.Id
+                })
+                .OrderBy(x => x.Text);
+
+        }
+
     }
 }

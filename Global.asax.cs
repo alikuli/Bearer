@@ -1,9 +1,11 @@
 ﻿
+using Bearer.DAL;
 using Bearer.Models;
 //using AppDbx.Models;
 using Bearer.MyPrograms;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using ModelsClassLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -48,15 +50,24 @@ namespace Bearer
             
             if (userFound==null)
             {
-                var user = new User { UserName = userName, Email = userName, EmailConfirmed = true, CreatedDate=DateTime.UtcNow,CreatedUser="Auto Created", Active=true,Comment="This is the Administrator user and is created automatically by the Computer.",LockoutEnabled=true };
+                var user = new User { UserName = userName, PhoneNumber = userName, PhoneNumberConfirmed=true, CreatedDate=new DateTimeAdapter().UtcNow,CreatedUser="Auto Created", Active=true,Comment="This is the Administrator user and is created automatically by the Computer.",LockoutEnabled=true };
                 userManager.Create(user, adminPassword);
                 userManager.AddToRole(user.Id, role);
+                
             }
 
+            try
+            {
+                new SetUpDAL(db, userName).InitializeSetUp();
+            }
+            catch
+            {
 
-            SetupSetup setItUp = new SetupSetup(db, "System");
-            setItUp.Initialize();
-            setItUp.LoadIntoMemory();
+            }
+
+            //SetupInitialize setItUp = new SetupInitialize(db, "System");
+            //setItUp.Initialize();
+            //setItUp.LoadIntoMemory();
 
             ////LOAD ALL THE VARIABLES INTO APPLICTION STATE
             //Application["CompanyName"] = db.SetUps

@@ -13,6 +13,9 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using ModelsClassLibrary.Models.Setup;
+using Bearer.MyPrograms.SetupStrategy;
+using AliKuli.Exceptions;
 
 namespace Bearer.Controllers
 
@@ -20,7 +23,7 @@ namespace Bearer.Controllers
     public class SetUpsController : BaseController
     {
         private ApplicationDbContext db;
-        private GlobalValuesVM globalValues;
+        //private GlobalValuesVM globalValues;
         private SetUpDAL repo;
         private string userName=string.Empty;
 
@@ -31,8 +34,7 @@ namespace Bearer.Controllers
         public SetUpsController()
         {
             db = new ApplicationDbContext();
-            globalValues = new GlobalValuesVM(db);
-            userName = AliKuli.GetUser.Name(User);
+            userName = AliKuli.GetSet.Name(User);
             repo = new SetUpDAL(db, userName);
         }
 
@@ -63,74 +65,6 @@ namespace Bearer.Controllers
                     sVM.Value = item.Value;
                     sVM.Name = item.Name;
 
-
-                    string incomingName = item.Name;
-
-                   switch (incomingName)
-                   {
-                       case "CompanyName":
-                           sVM.ApplicationValue = globalValues.CompanyName;
-                           break;
-                       case "SendGridUserName":
-                           sVM.ApplicationValue = globalValues.SendGridUserName;
-                           break;
-                       case "SendGridPassword":
-                           sVM.ApplicationValue = globalValues.SendGridPassword;
-                           break;
-                       case "SmtpPassword":
-                           sVM.ApplicationValue = globalValues.SmtpPassword;
-                           break;
-                       case "SmtpServer":
-                           sVM.ApplicationValue = globalValues.SmtpServer;
-                           break;
-                       case "SmtpUser":
-                           sVM.ApplicationValue = globalValues.SmtpUser;
-                           break;
-                       case "ShowStartUpScreenOnStartup":
-                           sVM.ApplicationValue = globalValues.ShowStartUpScreenOnStartup;
-                           break;
-                       case "DefaultPageSize":
-                           sVM.ApplicationValue = globalValues.DefaultPageSize;
-                           break;
-                       case "FromEmailAddress":
-                           sVM.ApplicationValue = globalValues.FromEmailAddress;
-                           break;
-                       case "BccEmailAddress":
-                           sVM.ApplicationValue = globalValues.BccEmailAddress;
-                           break;
-                       case "UseSendgridOrSmtp":
-                           sVM.ApplicationValue = globalValues.UseSendgridOrSmtp;
-                           break;
-                       case "WebsiteUrl":
-                           sVM.ApplicationValue = globalValues.WebsiteUrl;
-                           break;
-                       case "IsSendBcc":
-                           sVM.ApplicationValue = globalValues.IsSendBcc;
-                           break;
-                       case "SmtpPort":
-                           sVM.ApplicationValue = globalValues.SmtpPort ;
-                           break;
-
-                       case "SmtpDomain":
-                           sVM.ApplicationValue = globalValues.SmtpDomain ;
-                           break;
-
-                       case "SmsTestingDirectory":
-                           sVM.ApplicationValue = globalValues.SmsTestingDirectory;
-
-                           break;
-                       case "EmailTestingDirectory":
-                           sVM.ApplicationValue = globalValues.EmailTestingDirectory;
-                           break;
-
-
-
-
-                       default:
-                           sVM.ApplicationValue = "error: " + incomingName;
-                           break;
-
-                   }
 
 
                     
@@ -182,7 +116,10 @@ namespace Bearer.Controllers
             return View();
         }
 
-        // POST: SetUps/Create
+
+        
+        //Not Used 
+        //POST: SetUps/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -193,8 +130,12 @@ namespace Bearer.Controllers
             {
                 try
                 {
+                    SetupContext setupContext = new SetupContext(repo, userName);
+                    ISetupStrategy setupStrategy = setupContext.Create(setUp.Name);
+
                     repo.Create(setUp);
                     repo.Save();
+                    setupStrategy.Memory = setUp.Name; 
                 }
                 catch(Exception e)
                 {
@@ -277,222 +218,33 @@ namespace Bearer.Controllers
                 }
 
 
+                SetupContext setupContext = new SetupContext(repo, userName);
+                ISetupStrategy setupStrategy = setupContext.Create(sDb.Name);
+                
                 sDb.Value = setUp.Value;
-                setUp.Description = sDb.Description;
-
-
-                //CHECK BOOLS
-
-                if (sDb.Type == EnumTypes.boolean)
-                {
-                    if (sDb.Value.Trim().ToLower() == "yes" ||
-                        sDb.Value.Trim().ToLower() == "true" ||
-                        sDb.Value.Trim().ToLower() == "no" ||
-                        sDb.Value.Trim().ToLower() == "false")
-
-                    {
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Your answer must be 'Yes' or 'No' or 'True' or 'False.' Try again!");
-                        
-                        setUp.Description = sDb.Description;
-                        return View(setUp);
-
-                    }
-
-
-                    if (sDb.Value.Trim().ToLower() == "yes" || sDb.Value.Trim().ToLower() == "true") 
-                    {
-                        sDb.Value = "true";
-                    }
-
-                    if (sDb.Value.Trim().ToLower() == "no" ||
-                        sDb.Value.Trim().ToLower() == "false")
-                    {
-                        sDb.Value = "false";
-                    }
-                }
-
-
-                //CHECK INT
-
-
-                if(sDb.Type==EnumTypes.Integer)
-                {
-                    int theInteger;
-                    bool success = int.TryParse(sDb.Value, out theInteger);
-
-                    if(!success)
-                    {
-                        ModelState.AddModelError("", "You must enter an integer (number) for this value. Try again!");
-                        return View(setUp);
-                    }
-
-                }
-
-                //Check string
-                if(sDb.Type==EnumTypes.String)
-                {
-                    //Check the emails and URL
-                    string incomingEmailAndUrl = sDb.Name;
-                    string message = string.Empty;
-
-                    try
-                    {
-                        switch (incomingEmailAndUrl)
-                        {
-                            case "FromEmailAddress":
-                                if (!AliKuli.Validators.MyValidators.IsValidEmail(sDb.Value))
-                                {
-
-                                    message = "The FROM Email is not valid!";
-                                    throw new Exception(message);
-
-                                }
-                                break;
-
-                            case "BccEmailAddress":
-                                if (!AliKuli.Validators.MyValidators.IsValidEmail(sDb.Value))
-                                {
-                                    message = "The BCC Email is not valid!";
-                                    throw new Exception(message);
-
-                                }
-                                break;
-
-                            case "WebsiteUrl":
-                                if (!AliKuli.Validators.MyValidators.IsValidUrl(sDb.Value))
-                                {
-                                    message = "The URL is not valid!";
-                                    throw new Exception(message);
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                        ModelState.AddModelError("", e.Message);
-                        return View(setUp);
-                        
-                    }
-
-                }
-
-
-                if(sDb.Type==EnumTypes.FilePath)
-                {
-                    //this is used for local testing only... should not work on the web.
-                    try
-                    {
-                        if (!AliKuli.Validators.MyValidators.IsValidFilePath(sDb.Value))
-                        {
-                            string message = "The File Path is not valid!";
-                            throw new Exception(message);
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                        ModelState.AddModelError("", e.Message);
-                        return View(setUp);
-
-                    }
-                }
-
-                sDb.ModifiedDate = DateTime.UtcNow;
-                sDb.ModifiedUser = userName;
-
-
                 try
                 {
+                    sDb.Value = setupStrategy.Validate(sDb);
                     repo.Update(sDb);
-                    db.SaveChanges();
-
-
+                    repo.Save();
+                    setupStrategy.Memory = setUp.Value;
                 }
 
                 catch(Exception e)
                 {
                     string m = MakeErrorMesage("Answer not saved.", e);
                     ModelState.AddModelError("", m);
-                    return View(setUp);
-                }
+                    
+                    setUp.Description = sDb.Description;
+                    setUp.Id = sDb.Id;
+                    setUp.Name = sDb.Name;
+                    setUp.Value = sDb.Value;
 
-
-                try
-                {
-                    //Reading values into memory
-                    string incomingName = sDb.Name;
-
-                    switch (incomingName)
-                    {
-                        case "CompanyName":
-                            globalValues.CompanyName = sDb.Value;
-                            AliKuli.GlobalSetupValues.CompanyName = sDb.Value;
-                            break;
-                        case "SendGridUserName":
-                            globalValues.SendGridUserName = sDb.Value;
-                            break;
-                        case "SendGridPassword":
-                            globalValues.SendGridPassword = sDb.Value;
-                            break;
-                        case "SmtpPassword":
-                            globalValues.SmtpPassword= sDb.Value;
-                            break;
-                        case "SmtpServer":
-                            globalValues.SmtpServer= sDb.Value;
-                            break;
-                        case "SmtpUser":
-                            globalValues.SmtpUser= sDb.Value;
-                            break;
-                        case "ShowStartUpScreenOnStartup":
-                            globalValues.ShowStartUpScreenOnStartup = sDb.Value;
-                            break;
-                        case "DefaultPageSize":
-                            globalValues.DefaultPageSize = sDb.Value;
-                            break;
-                        case "FromEmailAddress":
-                            globalValues.FromEmailAddress = sDb.Value;
-                            break;
-                        case "BccEmailAddress":
-                            globalValues.BccEmailAddress = sDb.Value;
-                            break;
-                        case "UseSendgridOrSmtp":
-                            globalValues.UseSendgridOrSmtp = sDb.Value;
-                            break;
-                        case "WebsiteUrl":
-                            globalValues.WebsiteUrl = sDb.Value;
-                            break;
-                        case "IsSendBcc":
-                            globalValues.IsSendBcc = sDb.Value;
-                            break;
-
-                        case "SmtpPort":
-                            globalValues.SmtpPort = sDb.Value;
-                            break;
-
-                        case "SmtpDomain":
-                            globalValues.SmtpDomain = sDb.Value;
-                            break;
-                            
-                            
-                            
-                        default:
-                            string error="There was a problem updating the Application in switch statement. Please have administrator restart the application to see the update. The application may not work properly.";
-                            throw new Exception(error);
-                    }
-                    return RedirectToIndexActionHelper("Record Saved!");
-                }
-                catch (Exception e)
-                {
-                    ModelState.AddModelError("", e.Message);
                     return View(setUp);
                 }
 
             }
-            return View(setUp);
+            return RedirectToIndexActionHelper("Saved!");
         }
 
 
@@ -569,40 +321,26 @@ namespace Bearer.Controllers
             ////delete all the current.
             //db.SetUps.RemoveRange(db.SetUps);
             //db.SaveChanges();
-            //add back
+
             try
             {
-                //we have to add ToList otherwise we get an error that 2 readers are open.
-                var aliveSetup = repo.FindAll().ToList();
-                if (aliveSetup != null)
+                repo.DeleteAll();
+                try
                 {
-                    foreach (var item in aliveSetup)
-                    {
-                        repo.Delete(item);
-                    }
-                    repo.Save();
+                    repo.InitializeSetUp();
                 }
-
+                catch(NoDuplicateException)
+                {
+                    //do nothing
+                }
+                //repo.Save();
             }
             catch(Exception e)
             {
-                return RedirectToIndexActionErrorHelper("There was a problem while deleting. ", e);
-                
-            }
-            SetupSetup setup = new SetupSetup(db,userName);
-            try
-            {
-                setup.Initialize();
-                setup.LoadIntoMemory();
+                return RedirectToIndexActionErrorHelper("There was a problem. The initialization failed", e);
 
             }
-            catch (Exception e)
-            {
-
-                return RedirectToIndexActionErrorHelper("There was a problem. The Record was not Reset", e);
-
-            }
-            return RedirectToIndexActionHelper("There has now been a RESET. Now, you will need to add the values for each of the fields again!");
+            return RedirectToIndexActionHelper("Setup Initialized.");
         }
 
 
@@ -628,35 +366,49 @@ namespace Bearer.Controllers
 
         public ActionResult ResetFieldHttp(int id)
         {
-            var s = db.SetUps.FirstOrDefault(x => x.Id == id);
-            if (s==null)
-                return RedirectToIndexActionHelper("Please Try Again. A Null value was received");
-
+            string theName = "";
+            string fieldName = "";
             try
             {
+
+                var s = repo.FindFor(id);
+                if (s == null)
+                    return RedirectToIndexActionHelper("Please Try Again. A Null value was received");
+                //save the name because it will be deleted after this.
+                theName = s.Name;
+                fieldName=s.Description;
+
                 repo.Delete(s);
                 repo.Save();
             }
             catch(Exception e)
             {
                 return RedirectToIndexActionErrorHelper("There was a problem. The Record was not deleted.", e);
-
-
             }
-            //add back
-            SetupSetup setup = new SetupSetup(db, userName);
+
+            ////add back
+            //SetupInitialize setup = new SetupInitialize(db, userName);
             
             try
             {
-                setup.Initialize(s.Name);
-                setup.LoadIntoMemory();
-                return RedirectToIndexActionHelper(string.Format("Field '{0}' Has been Reset",s.Description));
+                SetupSingle(theName);
+                return RedirectToIndexActionHelper(string.Format("Field '{0}' Has been Reset",fieldName));
             }
 
             catch(Exception e)
             {
                 return RedirectToIndexActionErrorHelper("There was a problem. The Record was not Reset",e);
             }
+        }
+
+        private void SetupSingle(string theName)
+        {
+            SetupContext setupContext = new SetupContext(repo, userName);
+            ISetupStrategy strategy = setupContext.Create(theName);
+            SetUp setupNew = new SetUp();
+            setupNew = strategy.AddInfo(setupNew);
+            repo.Create(setupNew);
+            repo.Save();
         }
 
 
@@ -674,3 +426,124 @@ namespace Bearer.Controllers
 
     }
 }
+//CHECK BOOLS
+//if (sDb.Type == EnumTypes.Boolean)
+//{
+//    if (sDb.Value.Trim().ToLower() == "yes" ||
+//        sDb.Value.Trim().ToLower() == "true" ||
+//        sDb.Value.Trim().ToLower() == "no" ||
+//        sDb.Value.Trim().ToLower() == "false")
+
+//    {
+//    }
+//    else
+//    {
+//        ModelState.AddModelError("", "Your answer must be 'Yes' or 'No' or 'True' or 'False.' Try again!");
+
+//        setUp.Description = sDb.Description;
+//        return View(setUp);
+//    }
+
+
+//    if (sDb.Value.Trim().ToLower() == "yes" || sDb.Value.Trim().ToLower() == "true") 
+//    {
+//        sDb.Value = "true";
+//    }
+
+//    if (sDb.Value.Trim().ToLower() == "no" ||
+//        sDb.Value.Trim().ToLower() == "false")
+//    {
+//        sDb.Value = "false";
+//    }
+//}
+
+
+
+////CHECK INT
+//if(sDb.Type==EnumTypes.Integer)
+//{
+//    int theInteger;
+//    bool success = int.TryParse(sDb.Value, out theInteger);
+
+//    if(!success)
+//    {
+//        ModelState.AddModelError("", "You must enter an integer (number) for this value. Try again!");
+//        return View(setUp);
+//    }
+
+//}
+
+
+
+//Check string
+//if(sDb.Type==EnumTypes.String)
+//{
+//    //Check the emails and URL
+//    string incomingEmailAndUrl = sDb.Name;
+//    string message = string.Empty;
+
+//    try
+//    {
+//        switch (incomingEmailAndUrl)
+//        {
+//            case "FromEmailAddress":
+//                if (!AliKuli.Validators.MyValidators.IsValidEmail(sDb.Value))
+//                {
+
+//                    message = "The FROM Email is not valid!";
+//                    throw new Exception(message);
+
+//                }
+//                break;
+
+//            case "BccEmailAddress":
+//                if (!AliKuli.Validators.MyValidators.IsValidEmail(sDb.Value))
+//                {
+//                    message = "The BCC Email is not valid!";
+//                    throw new Exception(message);
+
+//                }
+//                break;
+
+//            case "WebsiteUrl":
+//                if (!AliKuli.Validators.MyValidators.IsValidUrl(sDb.Value))
+//                {
+//                    message = "The URL is not valid!";
+//                    throw new Exception(message);
+//                }
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+//    catch(Exception e)
+//    {
+//        ModelState.AddModelError("", e.Message);
+//        return View(setUp);
+
+//    }
+
+//}
+
+
+//if(sDb.Type==EnumTypes.FilePath)
+//{
+//    //this is used for local testing only... should not work on the web.
+//    try
+//    {
+//        if (!AliKuli.Validators.MyValidators.IsValidFilePath(sDb.Value))
+//        {
+//            string message = "The File Path is not valid!";
+//            throw new Exception(message);
+//        }
+//    }
+//    catch(Exception e)
+//    {
+//        ModelState.AddModelError("", e.Message);
+//        return View(setUp);
+
+//    }
+//}
+
+//sDb.ModifiedDate = new DateTimeAdapter().UtcNow;
+//sDb.ModifiedUser = userName;
