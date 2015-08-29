@@ -38,6 +38,9 @@ namespace Bearer.DAL
                 var itemExists = this.SearchFor(x => x.Name == entity.Name & x.Type == entity.Type).FirstOrDefault();
                 if (itemExists != null)
                     throw new NoDuplicateException(string.Format("The item '{0}' already exists! Try again.",entity.Name));
+                
+                AliKuli.Misc.WebRequests.CompanyName = entity.Name;
+
                 base.Create(entity);
             }
             catch
@@ -107,6 +110,7 @@ namespace Bearer.DAL
                     {
                         this.Create(s);
                         this.Save();
+
                     }
                     catch (NoDuplicateException)
                     {
@@ -130,11 +134,16 @@ namespace Bearer.DAL
         {
             try
             {
+
                 base.Update(entity);
-                AliKuli.Misc.WebRequests.CompanyName = entity.Name;
+
+                //if (entity.Name == SetupEnum.CompanyName.ToString())
+                //    AliKuli.Misc.WebRequests.CompanyName = entity.Name;
             }
             catch { throw; }
         }
+
+        
 
     }
 }

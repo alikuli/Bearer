@@ -12,6 +12,7 @@ namespace Bearer.MyPrograms.SetupStrategy
         DefaultPageSize,
         EmailTestingDirectory,
         FromEmailAddress,
+        Nida,
         SendGridOrSmtp,
         SendGridPassword,
         SendGridUserName,

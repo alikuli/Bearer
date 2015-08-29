@@ -8,22 +8,32 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Bearer.Models;
-using ModelsClassLibrary.Models.AddressNS;
+using ModelsClassLibrary.Models.CountryNS;
 using Bearer.DAL;
 using System.Text;
+using ModelsClassLibrary.Models.AddressNS;
 
 namespace Bearer.Controllers
 {
-    public class AddressesController : AbstractController<ModelsClassLibrary.Models.AddressNS.Address>
+    public class AddressesController : AbstractController<Address>
     {
-        public AddressesController() :
-            base(new AddressDAL(SetApplicationDbContext(), GetUser()))
+
+        private static ApplicationDbContext _db;
+        private static string _user;
+        
+        
+        //public  LanguageDAL lDal;
+        public AddressesController()
+            : base(new AddressDAL(SetApplicationDbContext(), GetUser()))
         {
 
         }
+
+
         private static ApplicationDbContext SetApplicationDbContext()
         {
-            return new ApplicationDbContext();
+            _db = new ApplicationDbContext();
+            return _db;
         }
 
         private static string GetUser()
@@ -31,10 +41,44 @@ namespace Bearer.Controllers
             StringBuilder sb = new StringBuilder();
             string s = AliKuli.GetSet.Name(null);
             sb.Append(s);
-            return s.ToString();
+            _user = s.ToString();
+            return _user;
         }
 
-        //---------------------------------------------------------------------
+
+        //====================================================================
+
+
+        
+
+        public override ActionResult Create()
+        {
+            CountryDAL cDal = new CountryDAL(_db, _user);
+            ViewBag.Countries = cDal.SelectList();
+
+            return base.Create();
+        }
+
+
+
+
+
+
+        public override async Task<ActionResult> Edit([Bind(Include = "Id,Name,Comment,ModifiedDateStart,PhoneIntlCode,Abbreviation,HouseNo,Road,Address2,City,State,Zip,CountryID")] Address entity)
+        {
+            CountryDAL cDal = new CountryDAL(_db, _user);
+            ViewBag.Countries = cDal.SelectList();
+
+            return await base.Edit(entity);
+        }
+
+        public override async Task<ActionResult> Edit(long? id)
+        {
+            CountryDAL cDal = new CountryDAL(_db, _user);
+            ViewBag.Countries = cDal.SelectList();
+
+            return await base.Edit(id);
+        }
 
     }
 }

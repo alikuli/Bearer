@@ -18,22 +18,30 @@ using Bearer.Models;
 namespace Bearer.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private ApplicationSignInManager _signInManager;
         private UserManager _userManager;
-        //private ApplicationDbContext db;
+        //private ApplicationDbContext _db;
 
         public AccountController()
         {
             //db = new ApplicationDbContext();
         }
 
-        public AccountController(UserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(UserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
         }
+        //public AccountController(UserManager userManager, ApplicationSignInManager signInManager, ApplicationDbContext dbContext)
+        //{
+        //    UserManager = userManager;
+        //    SignInManager = signInManager;
+        //    db = dbContext;
+        //}
+
+        
 
         public ApplicationSignInManager SignInManager
         {
@@ -92,6 +100,9 @@ namespace Bearer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+
+            //In this program, the phone number of the user will behave like his name!
+
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "Invalid login attempt.");
@@ -101,14 +112,21 @@ namespace Bearer.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
 
-            var user = UserManager.FindByName(model.Email);
-
+            //var user = UserManager.FindByName(model.Email);
+            //var user=UserManager.Users.FirstOrDefault(x=>x.PhoneNumber==model.Phone);
+            var user = UserManager.FindByName(model.Phone);
+            
             if (user != null)
             {
-                if (!await UserManager.IsEmailConfirmedAsync(user.Id))
+                var resultIsPhoneConfirmed = await UserManager.IsPhoneNumberConfirmedAsync(user.Id.ToString());
+                
+                //if (!await UserManager.IsEmailConfirmedAsync(user.Id))
+                if (!resultIsPhoneConfirmed)
                 {
-                    ViewBag.Message = "Your email is not confirmed. We have sent you an email. Please click the link in the email.";
-                    ViewBag.Title = "Email Not Confirmed!";
+                    //ViewBag.Message = "Your email is not confirmed. We have sent you an email. Please click the link in the email.";
+                    //ViewBag.Title = "Email Not Confirmed!";
+                    ViewBag.Message = "Your phone is not confirmed. We have sent you an SMS. Please Reply Back my SMS to number indicated.";
+                    ViewBag.Title = "SMS Not Confirmed!";
                     return View("Error");
                 }
 
@@ -121,7 +139,7 @@ namespace Bearer.Controllers
                 }
 
 
-                var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+                var result = await SignInManager.PasswordSignInAsync(model.Phone, model.Password, model.RememberMe, shouldLockout: false);
 
                 switch (result)
                 {
@@ -154,24 +172,40 @@ namespace Bearer.Controllers
 
         //
         // GET: /Account/VerifyCode
+        //[AllowAnonymous]
+        //public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
+        //{
+        //    // Require that the user has already logged in via username/password or external login
+        //    if (!await SignInManager.HasBeenVerifiedAsync())
+        //    {
+        //        return View("Error");
+        //    }
+        //    return View();
+        //}
+
         [AllowAnonymous]
-        public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
+        public  ActionResult VerifyCode(string phoneNumber)
         {
             // Require that the user has already logged in via username/password or external login
-            if (!await SignInManager.HasBeenVerifiedAsync())
-            {
-                return View("Error");
-            }
-            return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
+            //if (!await SignInManager.HasBeenVerifiedAsync())
+            //{
+            //    return View("Error");
+            //}
+            //return View(new VerifyCodeViewModel { UserId=userId});
+            VerifyPhoneNumberViewModel vpvm = new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber};
+            //return VerifyCode (vpvm,"xxxx" );
+            return View(vpvm);
         }
+
 
         //
         // POST: /Account/VerifyCode
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
+        public ActionResult VerifyCode(VerifyPhoneNumberViewModel model)
         {
+            //the code used here is a dummy to help with redirection
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -181,18 +215,46 @@ namespace Bearer.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
-            switch (result)
+            //var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+
+
+            var userFound = UserManager.FindByName(model.PhoneNumber);
+            var result = UserManager.ChangePhoneNumber(userFound.Id, userFound.PhoneNumber, model.Code);
+            
+            //if the result is successful, then the phone number is now verified. Therefore switch on verify
+            
+            switch (result.Succeeded)
             {
-                case SignInStatus.Success:
-                    return RedirectToLocal(model.ReturnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.Failure:
+                case true:
+                    userFound.PhoneNumberConfirmed = true;
+                    var updateresult =  UserManager.Update(userFound);
+                    if (!updateresult.Succeeded)
+                    {
+                        string additionalMsg = "Update Failed. Enter New number";
+                        SendSmsCode(userFound.Id, userFound.PhoneNumber, additionalMsg);
+
+                    }
+                    break;
                 default:
-                    ModelState.AddModelError("", "Invalid code.");
+                    //we need to do something here to fail a brute force attack
+                    //Best is to fail silently.... and send a new SMS number
+                    string msg = "Your try was wrong. If it was not you, then someone is trying to hack your number. Pls inform us immediately.";
+                    SendSmsCode(userFound.Id, userFound.PhoneNumber, msg);
+
+                    break;
+            }
+
+
+            switch (result.Succeeded)
+            {
+                case true: return View("Login", new LoginViewModel { Phone= userFound.PhoneNumber,Password=string.Empty});
+                default:
+                    ModelState.AddModelError("", "Unable to update user Verification.");
                     return View(model);
             }
+
+
+
         }
 
         //
@@ -212,9 +274,10 @@ namespace Bearer.Controllers
         {
             if (ModelState.IsValid)
             {
-                string userCreatingAccount = model.Email;
+                //string userCreatingAccount = model.Email;
+                string userCreatingAccount = "";
 
-                if (User!=null)
+                if (User!=null)//possibly another user will be entering another user's email
                 {
                     if (!string.IsNullOrEmpty(User.Identity.Name))
                     {
@@ -222,7 +285,10 @@ namespace Bearer.Controllers
                     }
                 }
 
-                var user = new User { UserName = model.Email, Email = model.Email,  CreatedDate = DateTime.UtcNow, CreatedUser = userCreatingAccount, LockoutEnabled=true, Active=false};
+                //name and phone numbers are the same. 
+
+
+                var user = new User { UserName = model.Phone, PhoneNumber=model.Phone, CreatedDate = new DateTimeAdapter().UtcNow, CreatedUser = userCreatingAccount, LockoutEnabled=true, Active=false};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -231,30 +297,56 @@ namespace Bearer.Controllers
                     
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
-                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    //string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     try
                     {
-                        await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                        return SendSmsCode(user.Id, model.Phone);
+                        //return RedirectToAction("GetCodeOrLogin");
                     }
                     catch(Exception e)
                     {
-                        ModelState.AddModelError("", e.Message);
-                        ViewBag.Title = "Error";
-                        ViewBag.Message = "There was an error sending an email. Error: " + e.Message;
-                        return View("Error");
-
+                        string error= MakeErrorMesage(string.Format( "There was an error sending SMS to Phone: '{0}'",model.Phone),e);
+                        ModelState.AddModelError("",error);
                     }
-                    ViewBag.Title = "Please Check Your Email.";
-                    ViewBag.Message = "We have sent you an email, you should receive it in the next few minutes. Please open it and click the link inside to activate your account.";
-                    return View("Error");
-                    //return RedirectToAction("Index", "Home");
                 }
+
                 AddErrors(result);
             }
-
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+        [AllowAnonymous]
+        public ActionResult GetCodeOrLogin(VerifyPhoneNumberViewModel fVM)
+        {
+            return View(fVM);
+        }
+        /// <summary>
+        /// This is a helper that sends out an SMS.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private ActionResult SendSmsCode(string userId,string phone,string AddMessage="")
+        {
+            string code = UserManager.GenerateChangePhoneNumberToken(userId, phone);
+
+            try
+            {
+                if (!string.IsNullOrEmpty(AddMessage))
+                {
+                    AddMessage = " - " + AddMessage;
+                }
+                UserManager.SendSms(userId, string.Format("Please confirm your phone no: '{0}' by sending Code: {1} {2}", phone, code, AddMessage));
+                VerifyPhoneNumberViewModel vpv=new VerifyPhoneNumberViewModel { PhoneNumber = phone };
+                return RedirectToAction("GetCodeOrLogin", vpv);
+            }
+            catch 
+            {
+
+                throw;
+
+            }
+
         }
 
         //
@@ -270,12 +362,27 @@ namespace Bearer.Controllers
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
+        // GET: /Account/ConfirmPhone
+        [AllowAnonymous]
+        public async Task<ActionResult> ConfirmPhone(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+            string phoneNumber= (await UserManager.FindByIdAsync(userId)).PhoneNumber;
+            var result = await UserManager.ChangePhoneNumberAsync(userId, phoneNumber,code);
+
+            return View(result.Succeeded ? "ConfirmPhone" : "Error");
+        }
+
         //
         // GET: /Account/ForgotPassword
         [AllowAnonymous]
-        public ActionResult ForgotPassword()
+        public ActionResult ForgotPassword(string phone="")
         {
-            return View();
+            ForgotPasswordViewModel model = new ForgotPasswordViewModel() { Phone = phone };
+            return View(model);
         }
 
         //
@@ -287,25 +394,26 @@ namespace Bearer.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                var user = await UserManager.FindByNameAsync(model.Phone);
+                //var user = await UserManager.FindByNameAsync(model.Email);
+                if (user == null)
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
                 }
 
+                if( (!(await UserManager.IsPhoneNumberConfirmedAsync(user.Id))))
+                {
+
+                    ViewBag.Message = "Your phone is not confirmed. We have sent you an SMS. Please Reply Back my SMS to number indicated.";
+                    ViewBag.Title = "SMS Not Confirmed!";
+                    return View("Error");
+
+                }
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                try
-                {
-                    await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                }
-                catch(Exception e)
-                {
-                    ModelState.AddModelError("", e.Message);
-                }
+
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
@@ -341,7 +449,9 @@ namespace Bearer.Controllers
             {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
+            //var user = await UserManager.FindByNameAsync(model.Email);
+            var user = await UserManager.FindByNameAsync(model.Phone);
+
             if (user == null)
             {
                 // Don't reveal that the user does not exist

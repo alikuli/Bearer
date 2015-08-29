@@ -6,7 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
+using AliKuli.Extentions;
 
 namespace Bearer.Controllers
 {
@@ -31,13 +34,14 @@ namespace Bearer.Controllers
             return s.ToString();
         }
 
-        public override async System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> Index(string message = "")
+        public override async Task<ActionResult> Index(string message = "")
         {
             //We need the select list from Address
             Repositry<Address> addressRep = new AddressDAL(base.repo.GetDb, base.repo.GetUser);
             AddressDAL addyDAL = (AddressDAL)addressRep;
-            ViewBag.AddressSelectList = addyDAL.SelectList();
+            //ViewBag.AddressSelectList = addyDAL.SelectList();
 
+            ViewBag.AddressSelectList = addyDAL.SelectList();
             return await base.Index(message);
         }   
     }

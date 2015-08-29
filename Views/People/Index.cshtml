@@ -24,19 +24,7 @@
             @Html.DisplayNameFor(model => model.Sex)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.HouseNo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Road)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Address2)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.City)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.State)
+            Address
         </th>
         <th></th>
     </tr>
@@ -53,19 +41,7 @@
             @Html.DisplayFor(modelItem => item.Sex)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.HouseNo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Road)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Address2)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.City)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.State)
+            @Html.DisplayFor(modelItem => item.AddressMain.ToString())
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |

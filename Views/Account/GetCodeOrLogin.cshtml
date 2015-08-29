@@ -1,0 +1,11 @@
+﻿@model ModelsClassLibrary.Models.VerifyPhoneNumberViewModel
+@{
+    ViewBag.Title = "GetCodeOrLogin";
+}
+
+@Html.HiddenFor(x => x.PhoneNumber)
+<h2>Get Code Or Login</h2>
+<hr />
+@Html.ActionLink("Log in", "Login", "Account")<br /><br />
+@Html.ActionLink("Enter Code", "VerifyCode", "Account", new { phoneNumber = @Model.PhoneNumber }, null)
+

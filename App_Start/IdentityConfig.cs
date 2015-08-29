@@ -66,7 +66,7 @@ namespace Bearer
 
             try
             {
-                string emailType = g.UseSendgridOrSmtp;
+                //string emailType = g.UseSendgridOrSmtp;
                 //IEmailStrategy emailStrategy =  EmailContext.CreateProvider(emailType);
                 IEmailStrategy emailStrategy = new TestEmailStrategy();
 
@@ -239,7 +239,7 @@ namespace Bearer
             // Plug in your SMS service here to send a text message.
             //return Task.FromResult(0);
 
-            ISmsStrategy j =  SmsContext.CreateSmsStrategy(SmsStrategyEnum.TESTER);
+            ISmsStrategy smsStrategy =  SmsContext.CreateSmsStrategy(SmsStrategyEnum.TESTER);
 
             try
             {
@@ -247,7 +247,7 @@ namespace Bearer
 
                 //var setUpVariable = db.SetUps;
                 GlobalValuesVM g = new GlobalValuesVM(db);
-                j.SendAsync(message, g);
+                smsStrategy.SendAsync(message, g);
 
                 return Task.FromResult(0);
             }
@@ -274,7 +274,8 @@ namespace Bearer
             manager.UserValidator = new UserValidator<User>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                RequireUniqueEmail = false,
+
             };
 
             // Configure validation logic for passwords
@@ -292,6 +293,9 @@ namespace Bearer
             manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             manager.MaxFailedAccessAttemptsBeforeLockout = 5;
 
+            
+            
+            
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.
             manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<User>
@@ -306,6 +310,11 @@ namespace Bearer
             
             manager.EmailService = new EmailService();
             manager.SmsService = new SmsService();
+
+
+
+
+
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {

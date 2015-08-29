@@ -42,6 +42,7 @@ namespace Bearer.MyPrograms.SetupStrategy
                     case SetupEnum.EmailTestingDirectory: return new EmailTestingDirectoryStrategy(setupDAL, user);
                     case SetupEnum.FromEmailAddress: return new FromEmailAddressStrategy(setupDAL, user);
                     case SetupEnum.IsSendBcc: return new IsSendBccStrategy(setupDAL, user);
+                    case SetupEnum.Nida: return new NidaStrategy(setupDAL, user);
                     case SetupEnum.SendGridOrSmtp: return new SendGridOrSmtpStrategy(setupDAL, user);
                     case SetupEnum.SendGridPassword: return new SendGridPasswordStrategy(setupDAL, user);
                     case SetupEnum.SendGridUserName: return new SendGridUserNameStrategy(setupDAL, user);

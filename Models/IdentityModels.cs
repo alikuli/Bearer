@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using ModelsClassLibrary.Models;
 using ModelsClassLibrary.Models.People;
 using ModelsClassLibrary.Models.AddressNS;
+using ModelsClassLibrary.Interfaces;
 
 namespace Bearer.Models
 {
@@ -19,6 +20,7 @@ namespace Bearer.Models
         public bool Active { get; set; }
 
 
+
         [Column(TypeName = "DateTime2")]
         [Display(Name = "Created (UTC)")]
         [DataType(DataType.Date)]
@@ -26,9 +28,12 @@ namespace Bearer.Models
         public DateTime CreatedDate { get; set; }
 
 
+
         [Display(Name = "Created By ")]
         [MaxLength(50)]
         public string CreatedUser { get; set; }
+
+
 
 
         [Column(TypeName = "DateTime2")]
@@ -37,12 +42,19 @@ namespace Bearer.Models
         [Display(Name = "Modified (UTC)")]
         public DateTime? ModifiedDate { get; set; }
 
+
+
         [Display(Name = "Modified By")]
         [MaxLength(50)]
         public string ModifiedUser { get; set; }
 
+
+
+
         [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
+
+
 
 
         [Column(TypeName = "DateTime2")]
@@ -51,11 +63,16 @@ namespace Bearer.Models
         [Display(Name = "Last Login (UTC)")]
         public DateTime? LastLogin { get; set; }
 
+
+
+
         [Column(TypeName = "DateTime2")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm:ss}", ApplyFormatInEditMode = true)]
         [Display(Name = "Last Lockout (UTC)")]
         public DateTime? LastLockout { get; set; }
+
+
 
 
         [Column(TypeName = "DateTime2")]
@@ -64,12 +81,23 @@ namespace Bearer.Models
         [Display(Name = "Last Signin Fail (UTC)")]
         public DateTime? LastSignInFailure{ get; set; }
 
+
+
         [Display(Name = "# of Logins")]
         [DisplayFormat(DataFormatString = "{0:#,0}", ApplyFormatInEditMode = false)]
         public int NoOfLogins { get; set; }
 
+
+        //[Display(Name = "# of Logins")]
+        //[DisplayFormat(DataFormatString = "{0:#,0}", ApplyFormatInEditMode = false)]
+        //public int NoFailedLogins { get; set; }
+
+
+
         public string IpAddressOfLastLogin { get; set; }
         
+
+
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager)
         {
@@ -144,6 +172,10 @@ namespace Bearer.Models
         public System.Data.Entity.DbSet<ModelsClassLibrary.Models.People.Language> Languages { get; set; }
 
         public System.Data.Entity.DbSet<ModelsClassLibrary.Models.People.PersonLanguage> PersonLanguages { get; set; }
+
+        //public System.Data.Entity.DbSet<ModelsClassLibrary.Models.AddressNS.Address> Addresses { get; set; }
+
+        public System.Data.Entity.DbSet<ModelsClassLibrary.Models.CountryNS.Country> Countries { get; set; }
 
         public System.Data.Entity.DbSet<ModelsClassLibrary.Models.AddressNS.Address> Addresses { get; set; }
 

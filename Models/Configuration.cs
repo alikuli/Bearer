@@ -44,7 +44,7 @@ namespace Bearer.Migrations
             //        Email="ali@ultimateDistribution.net",
             //        CreatedUser= "AKA",
             //        ModifiedUser= "AA",
-            //        ModifiedDate=DateTime.UtcNow,
+            //        ModifiedDate=new DateTimeAdapter().UtcNow,
             //        Comment="This is a test from config."
 
             //    },
@@ -62,7 +62,7 @@ namespace Bearer.Migrations
             //        Email="enjay@Hotmail.com",
             //        CreatedUser= "NJ",
             //        ModifiedUser= "ABA",
-            //        ModifiedDate=DateTime.UtcNow,
+            //        ModifiedDate=new DateTimeAdapter().UtcNow,
             //        Comment="This is a 2nd customer test from config."
 
             //    },

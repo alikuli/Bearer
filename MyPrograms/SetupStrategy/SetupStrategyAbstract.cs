@@ -53,7 +53,7 @@ namespace Bearer.MyPrograms.SetupStrategy
                 repo.SearchFor(x => x.Name == fieldName).FirstOrDefault().Name.ToString() :
                 string.Empty;
         }
-        public virtual string Value()
+        public virtual string ValueDb()
         {
             return repo.SearchFor(x => x.Name == fieldName).FirstOrDefault().Value != null ?
                 repo.SearchFor(x => x.Name == fieldName).FirstOrDefault().Value.ToString() :
@@ -78,7 +78,9 @@ namespace Bearer.MyPrograms.SetupStrategy
         public virtual string Validate(SetUp s)
         {
             value = s.Value;
-            return ValidatorContext.Validate(type).Validator(value, fieldName);
+            if (!s.Value.ToLower().Equals(value.ToLower()))
+                return ValidatorContext.Validate(type).Validator(value, fieldName);
+            else return value;
         }
     }
 }

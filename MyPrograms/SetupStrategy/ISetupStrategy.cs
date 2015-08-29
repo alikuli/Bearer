@@ -8,7 +8,7 @@ namespace Bearer.MyPrograms.SetupStrategy
         SetUp AddInfo(SetUp s);
         string Memory { get; set; }
         string NameFmDb();
-        string Value();
+        string ValueDb();
         string Validate(SetUp s);
     }
 }

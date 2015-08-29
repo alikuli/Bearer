@@ -15,6 +15,8 @@ namespace Bearer.DAL
 {
     public class PersonDAL : Repositry<Person>
     {
+         
+
 
         private ApplicationDbContext db;
         private string user;
@@ -25,6 +27,7 @@ namespace Bearer.DAL
             this.db = _db;
             this.user = user;
         }
+
 
         public override void Create(Person entity)
         {
@@ -119,15 +122,13 @@ namespace Bearer.DAL
             }
         }
 
-        public SelectList SelectList()
+        public IEnumerable<SelectListItem> SelectListAddress()
         {
-            return (SelectList)base.FindAll()
-                .Select(x => new
-                {
-                    Text = x.FullNameWithId,
-                    Value = x.Id
-                })
-                .OrderBy(x => x.Text);
+            //new SelectList(addressList, "Id", "Name", selectBoxInitialValue);
+            AddressDAL addDAL = new AddressDAL(db, user);
+
+            var addressList = addDAL.SelectList();
+            return addressList??new List<SelectListItem> ();
         }
 
 

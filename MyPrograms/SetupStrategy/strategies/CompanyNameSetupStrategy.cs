@@ -23,18 +23,19 @@ namespace Bearer.MyPrograms.SetupStrategy
             //This is the type of the item
             base.type = EnumTypes.String;
 
-            string theName = NameFmDb();
+            string theValue = ValueDb();
 
-            if (string.IsNullOrEmpty(theName))
+            if (string.IsNullOrEmpty(theValue))
                 base.value = "Sample Company";
             else
-                base.value = theName;
+                base.value = theValue;
+
+            this.Memory = theValue;
 
         }
 
         public override SetUp AddInfo(SetUp s)
         {   
-            this.Memory=base.fieldName;
             return base.AddInfo(s);
         }
 

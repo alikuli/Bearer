@@ -3,6 +3,7 @@ using Bearer.DAL;
 using Bearer.Models;
 using ModelsClassLibrary.DAL;
 using ModelsClassLibrary.Interfaces;
+using ModelsClassLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Web.Mvc;
 
 namespace Bearer.Controllers
 {
-    public abstract class AbstractController<T>:BaseController,IController<T> where T :ICommon
+    public abstract class AbstractController<T>:BaseController,IController<T> where T :ICommon, new()
     {
         //private ApplicationDbContext db;
         protected IRepositry<T> repo;
@@ -33,6 +34,13 @@ namespace Bearer.Controllers
         // GET: entitys
         public async virtual Task<ActionResult> Index(string message = "")
         {
+
+            //Type t = typeof(T);
+            //bool hasNameProperty= t.GetProperty("Name") != null;
+            
+
+
+
             //return View(await db.entitys.ToListAsync());
             if (!string.IsNullOrEmpty(message))
             {
@@ -47,7 +55,9 @@ namespace Bearer.Controllers
             catch (Exception e)
             {
                 MakeErrorMesage("Something went wrong. Try again.", e);
-                return View(repo.FindAll());
+
+
+                return View();
             }
 
         }
@@ -89,7 +99,7 @@ namespace Bearer.Controllers
             T l = (T)Activator.CreateInstance(typeof(T));
 
             //this is when we start to create the record
-            l.CreatedDateStarted = DateTime.UtcNow;
+            l.CreatedDateStarted = new DateTimeAdapter().UtcNow;
             return View(l);
 
         }
@@ -107,7 +117,7 @@ namespace Bearer.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public virtual async Task<ActionResult> Create([Bind(Include = "Name,Comment,CreatedDateStarted")] T entity)
+        public virtual async Task<ActionResult> Create([Bind(Include = "Name,Comment,CreatedDateStarted,PhoneIntlCode,Abbreviation,HouseNo,Road,Address2,City,State,Zip,CountryID")] T entity)
         //Id,CreatedDate,CreatedUser,ModifiedDateStart,ModifiedDate,ModifiedUser,Active,Deleted,DeletedByUser,DeleteDate,UnDeletedByUser,UnDeleteDate
         {
             //if (ModelState.IsValid)
@@ -172,7 +182,7 @@ namespace Bearer.Controllers
             {
                 T entity = await repo.FindForAsync(id);
 
-                entity.ModifiedDateStart = DateTime.UtcNow;
+                entity.ModifiedDateStart = new DateTimeAdapter().UtcNow;
                 entity.ModifiedDate = null;
                 return View(entity);
 
@@ -201,17 +211,10 @@ namespace Bearer.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async virtual Task<ActionResult> Edit([Bind(Include = "Id,Name,Comment,ModifiedDateStart")] T entity)
+        public async virtual Task<ActionResult> Edit([Bind(Include = "Id,Name,Comment,ModifiedDateStart,PhoneIntlCode,Abbreviation,HouseNo,Road,Address2,City,State,Zip,CountryID")] T entity)
 
             //CreatedDateStarted,CreatedDate,CreatedUser,ModifiedDate,ModifiedUser,,Active,Deleted,DeletedByUser,DeleteDate,UnDeletedByUser,UnDeleteDate
         {
-            //if (ModelState.IsValid)
-            //{
-            //    db.Entry(entity).State = EntityState.Modified;
-            //    await db.SaveChangesAsync();
-            //    return RedirectToAction("Index");
-            //}
-            //return View(entity);
 
             if (ModelState.IsValid)
             {
@@ -220,6 +223,7 @@ namespace Bearer.Controllers
                 try
                 {
                     await repo.UpdateAsync(entity);
+
                 }
                 catch (Exception e)
                 {
@@ -231,6 +235,7 @@ namespace Bearer.Controllers
                 try
                 {
                     await repo.SaveAsync();
+                    //repo.Save();
                     return RedirectToIndexActionHelper(string.Format("The record has been saved."));
                 }
                 catch (Exception e)
@@ -238,8 +243,8 @@ namespace Bearer.Controllers
                     ModelState.AddModelError("", MakeErrorMesage(string.Format("ERROR during entity Update saving."), e));
                     return View(entity);
                 }
-                //if you are here... there is an error
             }
+            //if you are here... there is an error
             return View(entity);
 
         }

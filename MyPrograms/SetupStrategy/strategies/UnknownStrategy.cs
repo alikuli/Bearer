@@ -63,7 +63,7 @@ namespace Bearer.MyPrograms.SetupStrategy
         }
 
 
-        public override string Value()
+        public override string ValueDb()
         {
             throw new Exception("The strategy is unknown");
         }

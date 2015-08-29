@@ -22,7 +22,7 @@ namespace Bearer.Controllers
             //var startUpValue = db.SetUps.FirstOrDefault(x => x.Name == "ShowStartUpScreenOnStartup");
             //string startUpValue = new ShowStartUpScreenOnStartupStrategy(db, AliKuli.GetUser.Name).GetFromTable();
             string userName = GetSet.Name();
-            string startupValue = new ShowStartUpScreenOnStartupStrategy(new SetUpDAL(db, userName), userName).Value();
+            string startupValue = new ShowStartUpScreenOnStartupStrategy(new SetUpDAL(db, userName), userName).ValueDb();
             if (startupValue.Trim().ToLower() == "yes")
                 return RedirectToAction("Index", "SetUps");
             else
