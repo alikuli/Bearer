@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 ﻿using Bearer.DAL;
 //using AppDbx.Models;
 using Bearer.Models;
 using ModelsClassLibrary.Models;
+=======
+﻿using AppDbx.Models;
+//using Bearer.Models;
+>>>>>>> Persons-fork
 using System;
 using System.Linq;
 using System.Web;

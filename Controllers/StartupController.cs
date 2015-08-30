@@ -1,8 +1,14 @@
+<<<<<<< HEAD
 ﻿using AliKuli;
 using Bearer.DAL;
 //using AppDbx.Models;
 using Bearer.Models;
 using Bearer.MyPrograms.SetupStrategy;
+=======
+﻿using AppDbx.Models;
+using ModelsClassLibrary.Models;
+////using Bearer.Models;
+>>>>>>> Persons-fork
 using System;
 using System.Collections.Generic;
 using System.Linq;

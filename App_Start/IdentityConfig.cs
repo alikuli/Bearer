@@ -7,17 +7,26 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+<<<<<<< HEAD
 
+=======
+//using Bearer.Models;
+>>>>>>> Persons-fork
 using System.Net;
 using SendGrid;
 using System.Net.Mail;
 using System.IO;
 using System.Text;
+<<<<<<< HEAD
 //using AppDbx.Models;
 using Bearer.Models;
 using Bearer.MyPrograms.EmailStrategy;
 using ModelsClassLibrary.Models.SMS;
 using Bearer.MyPrograms.SmsStrategy;
+=======
+using ModelsClassLibrary.Models;
+using AppDbx.Models;
+>>>>>>> Persons-fork
 
 
 namespace Bearer

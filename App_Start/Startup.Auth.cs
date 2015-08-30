@@ -5,9 +5,15 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
+<<<<<<< HEAD
 using Bearer.Models;
 ////using AppDbx.Models;
 
+=======
+using ModelsClassLibrary.Models;
+using AppDbx.Models;
+//using Bearer.Models;
+>>>>>>> Persons-fork
 
 namespace Bearer
 {

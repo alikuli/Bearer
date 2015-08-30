@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 ﻿
 using Bearer.DAL;
 using Bearer.Models;
 //using AppDbx.Models;
+=======
+﻿using ModelsClassLibrary.Models;
+//using Bearer.Models;
+>>>>>>> Persons-fork
 using Bearer.MyPrograms;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -14,6 +19,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using AppDbx.Models;
 
 namespace Bearer
 {

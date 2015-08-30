@@ -6,7 +6,11 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+<<<<<<< HEAD
 
+=======
+//using Bearer.Models;
+>>>>>>> Persons-fork
 using ModelsClassLibrary.Models;
 
 namespace Bearer.Controllers

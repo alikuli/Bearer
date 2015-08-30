@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 ﻿//using AppDbx.Models;
 using Bearer.Models;
+=======
+﻿using ModelsClassLibrary.Models;
+>>>>>>> Persons-fork
 using Bearer.MyPrograms;
 using Bearer.DAL;
 using ModelsClassLibrary.Models;
@@ -13,9 +17,13 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+<<<<<<< HEAD
 using ModelsClassLibrary.Models.Setup;
 using Bearer.MyPrograms.SetupStrategy;
 using AliKuli.Exceptions;
+=======
+using AppDbx.Models;
+>>>>>>> Persons-fork
 
 namespace Bearer.Controllers
 

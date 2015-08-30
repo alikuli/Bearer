@@ -8,11 +8,18 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+<<<<<<< HEAD
 
 using System.Data.Entity;
 using ModelsClassLibrary.Models;
 using Bearer.Models;
 //using AppDbx.Models;
+=======
+//using Bearer.;
+using System.Data.Entity;
+using ModelsClassLibrary.Models;
+using AppDbx.Models;
+>>>>>>> Persons-fork
 
 
 namespace Bearer.Controllers

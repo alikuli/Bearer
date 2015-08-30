@@ -1,11 +1,16 @@
+<<<<<<< HEAD
 ﻿
+=======
+﻿using Bearer;
+//using Bearer.Models;
+>>>>>>> Persons-fork
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Owin;
 using System.Web;
 
-[assembly: OwinStartupAttribute(typeof(Bearer.Startup))]
+[assembly: OwinStartupAttribute(typeof(Startup))]
 namespace Bearer
 {
     public partial class Startup

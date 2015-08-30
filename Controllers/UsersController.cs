@@ -7,12 +7,20 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+<<<<<<< HEAD
 
 using Microsoft.AspNet.Identity;
 using System.Text;
 //using AppDbx.Models;
 using Bearer.Models;
 using ModelsClassLibrary.Models;
+=======
+//using Bearer.Models;
+using Microsoft.AspNet.Identity;
+using System.Text;
+using ModelsClassLibrary.Models;
+using AppDbx.Models;
+>>>>>>> Persons-fork
 
 namespace Bearer.Controllers
 {
